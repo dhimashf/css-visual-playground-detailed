@@ -8,9 +8,23 @@
 </head>
 <body>
 
+<button class="nav-toggle" type="button" aria-controls="topic-sidebar" aria-expanded="false" aria-label="Buka daftar materi">
+  <span></span><span></span><span></span>
+</button>
+<button class="nav-scrim" type="button" aria-label="Tutup daftar materi" hidden></button>
+<aside class="topic-sidebar" id="topic-sidebar" aria-label="Navigasi materi" hidden>
+  <div class="sidebar-heading">
+    <h2>Daftar Materi</h2>
+    <button class="sidebar-close" type="button" aria-label="Tutup daftar materi">×</button>
+  </div>
+  <nav aria-label="Daftar topik CSS">
+    <ol class="topic-list"></ol>
+  </nav>
+</aside>
+
 <header>
   <h1>CSS Visual Playground</h1>
-  <p>Setiap nilai CSS dibuat sebagai contoh terpisah supaya perbedaannya langsung kelihatan.</p>
+  <p>Katalog visual konsep, properti, dan fitur CSS standar dari dasar hingga lanjutan.</p>
 </header>
 
 <main>
@@ -23,6 +37,7 @@
     <article class="card">
       <h3>Element, class, ID &amp; attribute selector</h3>
       <div class="selector-demo">
+        <p>Dipilih oleh element selector (p)</p>
         <p class="selector-class">Dipilih oleh class selector</p>
         <p id="selector-id">Dipilih oleh ID selector</p>
         <p data-kind="attribute">Dipilih oleh attribute selector</p>
@@ -474,29 +489,37 @@
   <div class="value-grid">
     <article class="card">
       <h3>visible</h3>
-      <p>Content yang keluar tetap terlihat.</p>
-      <div class="overflow-box overflow-visible">CONTENT PANJANG KELUAR DARI KOTAK</div>
+      <p>Isi yang melewati batas kotak tetap terlihat.</p>
+      <div class="overflow-box overflow-visible">
+        <div class="overflow-content"><b>AREA KONTEN</b><span>Bagian ini melewati batas kotak ke samping dan ke bawah.</span></div>
+      </div>
       <code>overflow: visible;</code>
     </article>
 
     <article class="card">
       <h3>hidden</h3>
-      <p>Content yang keluar dipotong.</p>
-      <div class="overflow-box overflow-hidden">CONTENT PANJANG KELUAR DARI KOTAK</div>
+      <p>Isi yang melewati batas kotak dipotong.</p>
+      <div class="overflow-box overflow-hidden">
+        <div class="overflow-content"><b>AREA KONTEN</b><span>Bagian ini melewati batas kotak ke samping dan ke bawah.</span></div>
+      </div>
       <code>overflow: hidden;</code>
     </article>
 
     <article class="card">
       <h3>scroll</h3>
-      <p>Scrollbar selalu disediakan.</p>
-      <div class="overflow-box overflow-scroll">CONTENT PANJANG KELUAR DARI KOTAK. Scroll untuk melihat.</div>
+      <p>Scrollbar tetap disediakan meskipun konten pendek dan muat.</p>
+      <div class="overflow-box overflow-scroll">
+        <div class="overflow-content overflow-content-short"><b>KONTEN MUAT</b><span>Tidak ada konten yang perlu di-scroll.</span></div>
+      </div>
       <code>overflow: scroll;</code>
     </article>
 
     <article class="card">
       <h3>auto</h3>
-      <p>Scrollbar muncul kalau memang dibutuhkan.</p>
-      <div class="overflow-box overflow-auto">CONTENT PANJANG KELUAR DARI KOTAK. Scroll untuk melihat.</div>
+      <p>Scrollbar muncul karena konten contoh ini memang melampaui kotak.</p>
+      <div class="overflow-box overflow-auto">
+        <div class="overflow-content"><b>KONTEN MELEBIHI AREA</b><span>Scroll area ini untuk melihat bagian teks yang tidak muat.</span></div>
+      </div>
       <code>overflow: auto;</code>
     </article>
   </div>
@@ -1153,7 +1176,7 @@
     <article class="card">
       <h3>grid-column: span 2</h3>
       <p>A mengambil lebar <b>2 kolom</b>.</p>
-      <div class="span-grid column-span">
+      <div class="span-grid">
         <i class="span-column">A<br><small>2 kolom</small></i>
         <i>B</i><i>C</i>
       </div>
@@ -1344,11 +1367,434 @@
   </div>
 </section>
 
+<section>
+  <h2>31. CASCADE LAYERS &amp; GLOBAL KEYWORDS</h2>
+  <p class="intro">Urutan layer, specificity, dan keyword global menentukan nilai akhir sebuah properti.</p>
+  <div class="value-grid">
+    <article class="card">
+      <h3>@layer</h3>
+      <div class="layer-demo"><span class="base">base</span><span class="components">components</span><span class="utilities">utilities</span><b>utilities menang</b></div>
+      <code>@layer base, components, utilities; /* layer terakhir menang untuk deklarasi normal */</code>
+    </article>
+    <article class="card">
+      <h3>inherit, initial, unset &amp; revert</h3>
+      <div class="global-keyword-demo">
+        <div>Parent: warna ungu <span>inherit</span><span>initial</span><span>unset</span><span>revert</span></div>
+      </div>
+      <code>color: inherit | initial | unset | revert;</code>
+    </article>
+    <article class="card">
+      <h3>!important</h3>
+      <div class="important-demo">Warna yang ditetapkan !important</div>
+      <code>color: #d14d72 !important;</code>
+    </article>
+  </div>
+</section>
+
+<section>
+  <h2>32. SELECTOR LANJUTAN &amp; STATE</h2>
+  <div class="value-grid">
+    <article class="card">
+      <h3>:nth-child(), :not() &amp; :is()</h3>
+      <ol class="advanced-selector-list"><li>Pertama</li><li>Kedua</li><li>Ketiga</li><li>Keempat</li></ol>
+      <code>li:nth-child(even); li:not(:first-child); :is(h2, h3)</code>
+    </article>
+    <article class="card">
+      <h3>:checked &amp; :has()</h3>
+      <label class="checked-demo"><input type="checkbox"> Centang untuk melihat state :checked</label>
+      <div class="has-demo"><span>Parent ikut berubah saat checkbox di atas dicentang.</span></div>
+      <code>.checked-demo:has(input:checked) + .has-demo { ... }</code>
+    </article>
+    <article class="card">
+      <h3>:empty, :first-child &amp; :last-child</h3>
+      <div class="structural-selector-demo"><span>Awal</span><span>Tengah</span><span>Akhir</span><i></i></div>
+      <code>:first-child; :last-child; :empty;</code>
+    </article>
+  </div>
+</section>
+
+<section>
+  <h2>33. LOGICAL PROPERTIES &amp; WRITING MODE</h2>
+  <p class="intro">Properti logical mengikuti arah tulisan, bukan selalu kiri/kanan atau atas/bawah.</p>
+  <div class="value-grid">
+    <article class="card">
+      <h3>margin-inline &amp; padding-block</h3>
+      <div class="logical-stage"><div>inline-start border + padding-block</div></div>
+      <code>margin-inline: auto; padding-block: 1rem; border-inline-start: 6px solid;</code>
+    </article>
+    <article class="card">
+      <h3>direction: rtl</h3>
+      <div class="logical-rtl" dir="rtl"><span>Mulai dari kanan</span><span>Berakhir di kiri</span></div>
+      <code>direction: rtl; margin-inline-start: 1rem;</code>
+    </article>
+    <article class="card">
+      <h3>writing-mode: vertical-rl</h3>
+      <div class="writing-mode-demo">Teks mengalir vertikal</div>
+      <code>writing-mode: vertical-rl; text-orientation: mixed;</code>
+    </article>
+  </div>
+</section>
+
+<section>
+  <h2>34. MULTI-COLUMN LAYOUT</h2>
+  <div class="value-grid">
+    <article class="card">
+      <h3>columns, column-gap &amp; column-rule</h3>
+      <div class="multicol-demo">CSS membagi teks menjadi beberapa kolom. Mata dapat mengikuti aliran dari kolom pertama menuju kolom berikutnya. Jarak dan garis pemisah bisa diatur terpisah.</div>
+      <code>columns: 2; column-gap: 24px; column-rule: 2px solid;</code>
+    </article>
+    <article class="card">
+      <h3>column-span: all</h3>
+      <div class="column-span-demo"><b>Judul melintasi kolom</b><span>Teks mengalir di kolom pertama dan kedua untuk memperlihatkan tata letak multi-kolom yang adaptif.</span></div>
+      <code>column-span: all;</code>
+    </article>
+  </div>
+</section>
+
+<section>
+  <h2>35. TABLE, LIST &amp; GENERATED CONTENT</h2>
+  <div class="value-grid">
+    <article class="card">
+      <h3>border-collapse &amp; table layout</h3>
+      <table class="table-demo">
+        <thead><tr><th>Properti</th><th>Nilai</th></tr></thead>
+        <tbody><tr><td>display</td><td>grid</td></tr><tr><td>gap</td><td>16px</td></tr></tbody>
+      </table>
+      <code>border-collapse: collapse; table-layout: fixed;</code>
+    </article>
+    <article class="card">
+      <h3>::marker &amp; counter</h3>
+      <ol class="counter-demo"><li>Selector</li><li>Layout</li><li>Responsive</li></ol>
+      <code>::marker { color: ... } /* list counters */</code>
+    </article>
+    <article class="card">
+      <h3>::before, ::after &amp; quotes</h3>
+      <blockquote class="quotes-demo">CSS mengubah presentasi, bukan isi semantik.</blockquote>
+      <code>blockquote::before { content: open-quote; }</code>
+    </article>
+  </div>
+</section>
+
+<section>
+  <h2>36. FORM CONTROLS &amp; USER INTERFACE</h2>
+  <div class="value-grid">
+    <article class="card">
+      <h3>:focus-visible, :valid &amp; :disabled</h3>
+      <form class="form-demo">
+        <label>Email validasi<input type="email" placeholder="nama@contoh.id" required></label>
+        <label>Field nonaktif<input type="text" value="Tidak bisa diedit" disabled></label>
+        <button type="button">Fokus dengan tombol Tab</button>
+      </form>
+      <code>:focus-visible; :valid; :invalid; :disabled;</code>
+    </article>
+    <article class="card">
+      <h3>accent-color &amp; caret-color</h3>
+      <label class="accent-demo"><input type="checkbox" checked> Checkbox dengan accent-color</label>
+      <label class="accent-demo">Ketik untuk melihat caret<input type="text" placeholder="Caret ungu"></label>
+      <code>accent-color: #6750a4; caret-color: #d14d72;</code>
+    </article>
+    <article class="card">
+      <h3>cursor &amp; resize</h3>
+      <div class="cursor-demo"><span>cursor: help</span><textarea aria-label="Coba resize textarea">Ubah ukuran area ini</textarea></div>
+      <code>cursor: help; resize: both;</code>
+    </article>
+  </div>
+</section>
+
+<section>
+  <h2>37. OBJECT FIT &amp; OBJECT POSITION</h2>
+  <p class="intro">Gambar dapat mengisi frame dengan crop atau mempertahankan seluruh isinya.</p>
+  <div class="value-grid">
+    <article class="card">
+      <h3>object-fit: cover</h3>
+      <div class="object-frame"><img class="object-cover" alt="Ilustrasi abstrak ungu dan hijau" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 320 180'%3E%3Crect width='320' height='180' fill='%236750a4'/%3E%3Ccircle cx='85' cy='90' r='72' fill='%23219678'/%3E%3Ccircle cx='230' cy='65' r='45' fill='%23d97706'/%3E%3C/svg%3E"></div>
+      <code>object-fit: cover; object-position: center;</code>
+    </article>
+    <article class="card">
+      <h3>object-fit: contain</h3>
+      <div class="object-frame"><img class="object-contain" alt="Ilustrasi abstrak ungu dan hijau" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 320 180'%3E%3Crect width='320' height='180' fill='%236750a4'/%3E%3Ccircle cx='85' cy='90' r='72' fill='%23219678'/%3E%3Ccircle cx='230' cy='65' r='45' fill='%23d97706'/%3E%3C/svg%3E"></div>
+      <code>object-fit: contain; object-position: 50% 50%;</code>
+    </article>
+    <article class="card">
+      <h3>aspect-ratio &amp; overflow</h3>
+      <div class="object-frame object-offset"><img alt="Ilustrasi abstrak dengan fokus di sisi kanan" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 320 180'%3E%3Crect width='320' height='180' fill='%236750a4'/%3E%3Ccircle cx='85' cy='90' r='72' fill='%23219678'/%3E%3Ccircle cx='230' cy='65' r='45' fill='%23d97706'/%3E%3C/svg%3E"></div>
+      <code>object-fit: cover; object-position: 80% center;</code>
+    </article>
+  </div>
+</section>
+
+<section>
+  <h2>38. SCROLL BEHAVIOR &amp; SCROLL SNAP</h2>
+  <div class="value-grid">
+    <article class="card">
+      <h3>scroll-snap-type: x mandatory</h3>
+      <p>Geser atau scroll horizontal; tiap kartu akan berhenti pada snap point.</p>
+      <div class="scroll-snap-demo"><div>01 — START</div><div>02 — CENTER</div><div>03 — END</div></div>
+      <code>overflow-x: auto; scroll-snap-type: x mandatory;</code>
+    </article>
+    <article class="card">
+      <h3>scroll-padding &amp; overscroll</h3>
+      <div class="scroll-margin-demo"><span>Area scroll dengan batas overscroll dan padding internal</span></div>
+      <code>scroll-padding: 12px; overscroll-behavior: contain;</code>
+    </article>
+  </div>
+</section>
+
+<section>
+  <h2>39. CLIP-PATH, MASK &amp; BLEND MODE</h2>
+  <div class="value-grid">
+    <article class="card">
+      <h3>clip-path: polygon()</h3>
+      <div class="clip-demo">CLIP</div>
+      <code>clip-path: polygon(50% 0, 100% 100%, 0 100%);</code>
+    </article>
+    <article class="card">
+      <h3>mask-image</h3>
+      <div class="mask-demo">Mask gradient</div>
+      <code>mask-image: linear-gradient(to right, #000, transparent);</code>
+    </article>
+    <article class="card">
+      <h3>mix-blend-mode</h3>
+      <div class="blend-demo"><span></span><i></i></div>
+      <code>mix-blend-mode: multiply;</code>
+    </article>
+  </div>
+</section>
+
+<section>
+  <h2>40. CONTAINER QUERIES</h2>
+  <p class="intro">Container query menata komponen berdasarkan ukuran parent, bukan viewport.</p>
+  <article class="card">
+    <h3>@container</h3>
+    <div class="container-query-stage"><div class="container-query-card"><b>Komponen adaptif</b><span>Ubah lebar viewport untuk mengubah ukuran container.</span></div></div>
+    <code>.parent { container-type: inline-size; } @container (min-width: 480px) { ... }</code>
+  </article>
+</section>
+
+<section>
+  <h2>41. COLOR SCHEME &amp; COLOR MIX</h2>
+  <div class="value-grid">
+    <article class="card">
+      <h3>color-scheme: light / dark</h3>
+      <div class="scheme-demo"><label><input type="checkbox" checked> Kontrol native ikut color-scheme</label></div>
+      <code>color-scheme: light dark;</code>
+    </article>
+    <article class="card">
+      <h3>color-mix()</h3>
+      <div class="color-mix-demo"><span>Ungu</span><span>Campuran</span><span>Putih</span></div>
+      <code>color-mix(in oklch, #6750a4 50%, white);</code>
+    </article>
+    <article class="card">
+      <h3>color: currentColor</h3>
+      <div class="current-color-demo">Teks, border, dan ikon berbagi currentColor <span>★</span></div>
+      <code>border-color: currentColor;</code>
+    </article>
+  </div>
+</section>
+
+<section>
+  <h2>42. CSS FEATURE QUERIES &amp; PROPERTY REGISTRATION</h2>
+  <div class="value-grid">
+    <article class="card">
+      <h3>@supports</h3>
+      <div class="supports-demo">Tampilan menandai dukungan fitur browser.</div>
+      <code>@supports (display: grid) { ... }</code>
+    </article>
+    <article class="card">
+      <h3>@property &amp; typed custom property</h3>
+      <div class="registered-property-demo">Properti custom bertipe bisa dianimasikan.</div>
+      <code>@property --demo-angle { syntax: "&lt;angle&gt;"; inherits: false; initial-value: 0deg; }</code>
+    </article>
+    <article class="card">
+      <h3>Fallback dengan var()</h3>
+      <div class="fallback-demo">Fallback saat custom property tidak tersedia.</div>
+      <code>color: var(--warna-opsional, #6750a4);</code>
+    </article>
+  </div>
+</section>
+
+<section>
+  <h2>43. PRINT STYLES &amp; ACCESSIBILITY PREFERENCES</h2>
+  <div class="value-grid">
+    <article class="card">
+      <h3>prefers-reduced-motion</h3>
+      <div class="reduced-motion-demo">Animasi menghormati preferensi sistem.</div>
+      <code>@media (prefers-reduced-motion: reduce) { animation: none; }</code>
+    </article>
+    <article class="card">
+      <h3>prefers-color-scheme</h3>
+      <div class="preferred-color-demo">Warna mengikuti preferensi OS.</div>
+      <code>@media (prefers-color-scheme: dark) { ... }</code>
+    </article>
+    <article class="card">
+      <h3>@media print</h3>
+      <p>Kartu ini berubah saat halaman dicetak atau dibuka pada print preview.</p>
+      <code>@media print { background: white; color: black; }</code>
+    </article>
+  </div>
+</section>
+
+<section>
+  <h2>44. TEXT WRAPPING &amp; NUMERIC TYPOGRAPHY</h2>
+  <div class="value-grid">
+    <article class="card">
+      <h3>text-wrap: balance</h3>
+      <div class="text-wrap-demo">Judul ini membagi baris agar panjang setiap baris lebih seimbang.</div>
+      <code>text-wrap: balance; max-width: 24ch;</code>
+    </article>
+    <article class="card">
+      <h3>font-variant-numeric: tabular-nums</h3>
+      <div class="numeric-demo"><span>Normal: 1 11 111</span><span>Tabular: 1 11 111</span></div>
+      <code>font-variant-numeric: tabular-nums;</code>
+    </article>
+    <article class="card">
+      <h3>hyphens &amp; overflow-wrap</h3>
+      <div class="hyphen-demo">internationalizationlongword example</div>
+      <code>hyphens: auto; overflow-wrap: anywhere;</code>
+    </article>
+  </div>
+</section>
+
+<section>
+  <h2>45. 3D TRANSFORMS &amp; PERSPECTIVE</h2>
+  <div class="value-grid">
+    <article class="card">
+      <h3>perspective &amp; rotateY()</h3>
+      <div class="perspective-stage"><div>ROTATE Y</div></div>
+      <code>perspective: 500px; transform: rotateY(-25deg);</code>
+    </article>
+    <article class="card">
+      <h3>transform-style: preserve-3d</h3>
+      <div class="preserve-3d-stage"><div><span>DEPTH</span></div></div>
+      <code>transform-style: preserve-3d; translateZ(30px);</code>
+    </article>
+    <article class="card">
+      <h3>backface-visibility</h3>
+      <div class="backface-stage"><div class="backface-front">FRONT</div><div class="backface-back">BACK</div></div>
+      <code>backface-visibility: hidden; transform: rotateY(180deg);</code>
+    </article>
+  </div>
+</section>
+
+<section>
+  <h2>46. CONTAINMENT &amp; RENDERING</h2>
+  <div class="value-grid">
+    <article class="card">
+      <h3>contain: layout paint</h3>
+      <div class="containment-stage"><div>Area terisolasi</div><span>Perubahan layout dibatasi pada container.</span></div>
+      <code>contain: layout paint;</code>
+    </article>
+    <article class="card">
+      <h3>content-visibility: auto</h3>
+      <div class="content-visibility-demo">Konten ini memakai ukuran intrinsik cadangan jika browser menunda rendering saat berada di luar layar.</div>
+      <code>content-visibility: auto; contain-intrinsic-size: auto 120px;</code>
+    </article>
+    <article class="card">
+      <h3>will-change</h3>
+      <div class="will-change-demo">Hover untuk transform yang dipersiapkan browser.</div>
+      <code>will-change: transform; /* gunakan hanya saat diperlukan */</code>
+    </article>
+  </div>
+</section>
+
+<section>
+  <h2>47. POINTER, TOUCH &amp; SCROLLBAR</h2>
+  <div class="value-grid">
+    <article class="card">
+      <h3>user-select &amp; touch-action</h3>
+      <div class="touch-demo">Coba pilih atau geser area ini. Di perangkat sentuh, gerakan vertikal tetap bisa scroll halaman.</div>
+      <code>user-select: none; touch-action: pan-y;</code>
+    </article>
+    <article class="card">
+      <h3>scrollbar-gutter: stable</h3>
+      <div class="stable-scroll-demo"><p>Gutter scrollbar dicadangkan agar lebar konten tidak meloncat.</p><p>Konten tambahan.</p><p>Konten tambahan.</p><p>Konten tambahan.</p></div>
+      <code>overflow: auto; scrollbar-gutter: stable;</code>
+    </article>
+    <article class="card">
+      <h3>hover &amp; pointer media features</h3>
+      <div class="pointer-query-demo">Gaya menyesuaikan kemampuan pointer perangkat.</div>
+      <code>@media (hover: hover) and (pointer: fine) { ... }</code>
+    </article>
+  </div>
+</section>
+
+<section>
+  <h2>48. CSS NESTING &amp; @SCOPE</h2>
+  <div class="value-grid">
+    <article class="card">
+      <h3>Nested rules</h3>
+      <div class="nesting-demo"><span>Parent</span><b>Child ikut gaya nested rule</b></div>
+      <code>.nesting-demo { &amp; b { color: #6750a4; } }</code>
+    </article>
+    <article class="card">
+      <h3>@scope</h3>
+      <div class="scope-demo"><p class="scoped-text">Teks di dalam scope</p></div>
+      <p class="scope-outside">Teks di luar scope tetap normal.</p>
+      <code>@scope (.scope-demo) { p.scoped-text { color: #219678; } }</code>
+    </article>
+  </div>
+</section>
+
+<section>
+  <h2>49. GRID SUBGRID</h2>
+  <p class="intro">Subgrid membuat grid bersarang mengikuti track grid induk.</p>
+  <article class="card">
+    <h3>grid-template-columns: subgrid</h3>
+    <div class="subgrid-demo"><b>Label</b><b>Deskripsi</b><div><span>gap</span><span>Jarak antara track</span></div><div><span>minmax()</span><span>Batas ukuran yang fleksibel</span></div></div>
+    <code>grid-column: 1 / -1; display: grid; grid-template-columns: subgrid;</code>
+  </article>
+</section>
+
 </main>
 
 <div class="fixed-button">FIXED</div>
 
 <footer>CSS Visual Playground — edit style.css untuk bereksperimen.</footer>
+
+<script>
+  const sidebar = document.querySelector(".topic-sidebar");
+  const topicList = document.querySelector(".topic-list");
+  const navToggle = document.querySelector(".nav-toggle");
+  const navScrim = document.querySelector(".nav-scrim");
+  const navClose = document.querySelector(".sidebar-close");
+
+  document.querySelectorAll("main > section > h2").forEach((heading, index) => {
+    const section = heading.parentElement;
+    const id = `topic-${index + 1}`;
+    section.id = id;
+
+    const item = document.createElement("li");
+    const link = document.createElement("a");
+    link.href = `#${id}`;
+    link.textContent = heading.textContent.replace(/^\d+\.\s*/, "");
+    item.append(link);
+    topicList.append(item);
+  });
+
+  function setSidebarOpen(open) {
+    sidebar.hidden = !open;
+    navScrim.hidden = !open;
+    navToggle.setAttribute("aria-expanded", String(open));
+    navToggle.setAttribute("aria-label", open ? "Tutup daftar materi" : "Buka daftar materi");
+    document.body.classList.toggle("sidebar-open", open);
+
+    if (open) {
+      sidebar.querySelector("a").focus();
+    } else {
+      navToggle.focus();
+    }
+  }
+
+  navToggle.addEventListener("click", () => setSidebarOpen(sidebar.hidden));
+  navClose.addEventListener("click", () => setSidebarOpen(false));
+  navScrim.addEventListener("click", () => setSidebarOpen(false));
+  topicList.addEventListener("click", (event) => {
+    if (event.target.closest("a")) setSidebarOpen(false);
+  });
+  document.addEventListener("keydown", (event) => {
+    if (event.key === "Escape" && !sidebar.hidden) setSidebarOpen(false);
+  });
+</script>
 
 </body>
 </html>
