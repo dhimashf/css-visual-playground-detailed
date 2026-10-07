@@ -1,0 +1,1354 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CSS Visual Playground — Detailed</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header>
+  <h1>CSS Visual Playground</h1>
+  <p>Setiap nilai CSS dibuat sebagai contoh terpisah supaya perbedaannya langsung kelihatan.</p>
+</header>
+
+<main>
+
+<section>
+  <h2>1. SELECTOR, CASCADE &amp; INHERITANCE</h2>
+  <p class="intro">Selector memilih elemen; cascade dan specificity menentukan aturan mana yang menang; beberapa properti juga diwariskan ke anak.</p>
+
+  <div class="value-grid">
+    <article class="card">
+      <h3>Element, class, ID &amp; attribute selector</h3>
+      <div class="selector-demo">
+        <p class="selector-class">Dipilih oleh class selector</p>
+        <p id="selector-id">Dipilih oleh ID selector</p>
+        <p data-kind="attribute">Dipilih oleh attribute selector</p>
+      </div>
+      <code>p { ... } .selector-class { ... } #selector-id { ... } [data-kind] { ... }</code>
+    </article>
+
+    <article class="card">
+      <h3>Combinator selector</h3>
+      <div class="combinator-demo">
+        <div class="combinator-parent"><b>Child langsung (parent &gt; child)</b></div>
+        <div class="combinator-descendant"><b>Descendant selector (parent child)</b></div>
+        <p class="combinator-item">Item untuk sibling selector</p>
+        <p>Adjacent sibling selector (+)</p>
+        <p>General sibling selector (~)</p>
+      </div>
+      <code>.parent &gt; child; .parent child; .item + p; .item ~ p</code>
+    </article>
+
+    <article class="card">
+      <h3>Specificity &amp; cascade</h3>
+      <div class="specificity-stage">
+        <p class="specificity-example" id="specificity-example">ID selector menang di sini</p>
+      </div>
+      <code>p &lt; .class &lt; #id (specificity makin kuat)</code>
+    </article>
+
+    <article class="card">
+      <h3>Inheritance</h3>
+      <div class="inheritance-demo">Warna dan font diwariskan
+        <span>Anak mewarisi warna dan font parent</span>
+      </div>
+      <code>color dan font-family umumnya diwariskan</code>
+    </article>
+
+    <article class="card">
+      <h3>Pseudo-class &amp; pseudo-element</h3>
+      <div class="pseudo-demo">
+        <button type="button">Hover / focus</button>
+        <p>Before dan after ditambahkan melalui CSS.</p>
+      </div>
+      <code>:hover; :focus-visible; ::before; ::after</code>
+    </article>
+  </div>
+</section>
+
+<section>
+  <h2>2. BOX MODEL</h2>
+
+  <article class="card">
+    <h3>Urutan kotak CSS</h3>
+    <div class="box-model">
+      <div class="margin-layer">
+        MARGIN
+        <div class="border-layer">
+          BORDER
+          <div class="padding-layer">
+            PADDING
+            <div class="content-layer">CONTENT</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <p class="intro">
+      <b>Content</b> = isi.
+      <b>Padding</b> = jarak isi ke pinggir.
+      <b>Border</b> = garis pinggir.
+      <b>Margin</b> = jarak kotak ke elemen lain.
+    </p>
+  </article>
+
+  <div class="value-grid box-sizing-grid">
+    <article class="card">
+      <h3>content-box (default)</h3>
+      <p>Lebar 180px hanya menghitung content. Padding dan border menambah ukuran total.</p>
+      <div class="sizing-stage"><div class="sizing-box content-box-demo">width: 180px</div></div>
+      <code>box-sizing: content-box;</code>
+    </article>
+
+    <article class="card">
+      <h3>border-box</h3>
+      <p>Lebar 180px sudah termasuk content, padding, dan border.</p>
+      <div class="sizing-stage"><div class="sizing-box border-box-demo">width: 180px</div></div>
+      <code>box-sizing: border-box;</code>
+    </article>
+
+    <article class="card">
+      <h3>padding &amp; border</h3>
+      <p>Padding menambah ruang di dalam border; border menentukan garis tepi kotak.</p>
+      <div class="spacing-box">CONTENT</div>
+      <code>padding: 20px; border: 6px solid;</code>
+    </article>
+
+    <article class="card">
+      <h3>margin</h3>
+      <p>Margin menambah jarak di luar border dan memisahkan elemen dari sekitarnya.</p>
+      <div class="margin-demo"><div>KOTAK 1</div><div>KOTAK 2</div></div>
+      <code>margin: 16px 0;</code>
+    </article>
+  </div>
+</section>
+
+<section>
+  <h2>3. DISPLAY — BLOCK, INLINE, FLEX &amp; GRID</h2>
+  <p class="intro">
+    <code>display</code> menentukan cara elemen ikut dalam layout. Bandingkan ukuran dan posisi
+    item pada setiap contoh.
+  </p>
+
+  <div class="value-grid">
+    <article class="card">
+      <h3>block</h3>
+      <p>Memulai baris baru dan dapat menggunakan width serta height.</p>
+      <div class="display-stage"><span class="display-block">BLOCK A</span><span class="display-block">BLOCK B</span></div>
+      <code>display: block;</code>
+    </article>
+
+    <article class="card">
+      <h3>inline</h3>
+      <p>Tetap dalam alur teks; width dan height tidak mengatur ukuran kotak.</p>
+      <div class="display-stage"><span class="display-inline">INLINE A</span><span class="display-inline">INLINE B</span></div>
+      <code>display: inline;</code>
+    </article>
+
+    <article class="card">
+      <h3>inline-block</h3>
+      <p>Tetap sejajar seperti inline, tetapi width dan height berlaku.</p>
+      <div class="display-stage"><span class="display-inline-block">ITEM A</span><span class="display-inline-block">ITEM B</span></div>
+      <code>display: inline-block;</code>
+    </article>
+
+    <article class="card">
+      <h3>flex</h3>
+      <p>Menyusun item dalam satu dimensi: baris atau kolom.</p>
+      <div class="display-stage display-flex"><span>A</span><span>B</span><span>C</span></div>
+      <code>display: flex; gap: 8px;</code>
+    </article>
+
+    <article class="card">
+      <h3>grid</h3>
+      <p>Menyusun item dalam baris dan kolom.</p>
+      <div class="display-stage display-grid"><span>A</span><span>B</span><span>C</span></div>
+      <code>display: grid; grid-template-columns: repeat(3, 1fr);</code>
+    </article>
+
+    <article class="card">
+      <h3>none</h3>
+      <p>Elemen dihilangkan dari layout, termasuk ruangnya.</p>
+      <div class="display-stage display-none-demo"><span>A</span><span class="display-hidden-item">B (none)</span><span>C</span></div>
+      <code>display: none;</code>
+    </article>
+  </div>
+
+  <h3 class="subheading">DISPLAY &amp; VISIBILITY</h3>
+
+  <article class="card">
+    <div class="visibility-grid">
+      <div class="visibility-demo">NORMAL</div>
+      <div class="visibility-demo display-none">display: none</div>
+      <div class="visibility-demo visibility-hidden">visibility: hidden</div>
+      <div class="visibility-demo opacity-zero">opacity: 0</div>
+    </div>
+
+    <div class="explanation-table">
+      <div><b>display:none</b><span>Hilangkan elemen + tempatnya.</span></div>
+      <div><b>visibility:hidden</b><span>Hilangkan elemen + tempat tetap.</span></div>
+      <div><b>opacity:0</b><span>Transparan + tempat tetap.</span></div>
+    </div>
+  </article>
+</section>
+
+<section>
+  <h2>4. COLORS</h2>
+  <p class="intro">Warna CSS dapat ditulis dengan nama, HEX, RGB, HSL, alpha transparency, atau gradient.</p>
+
+  <div class="value-grid">
+    <article class="card">
+      <h3>Named color</h3>
+      <div class="color-swatch named-color">tomato</div>
+      <code>color: white; background-color: tomato;</code>
+    </article>
+
+    <article class="card">
+      <h3>HEX</h3>
+      <div class="color-swatch hex-color">#6750A4</div>
+      <code>background-color: #6750A4;</code>
+    </article>
+
+    <article class="card">
+      <h3>RGB</h3>
+      <div class="color-swatch rgb-color">rgb(33, 150, 120)</div>
+      <code>background-color: rgb(33, 150, 120);</code>
+    </article>
+
+    <article class="card">
+      <h3>HSL</h3>
+      <div class="color-swatch hsl-color">hsl(215, 75%, 48%)</div>
+      <code>background-color: hsl(215, 75%, 48%);</code>
+    </article>
+
+    <article class="card">
+      <h3>RGBA alpha</h3>
+      <div class="alpha-stage"><div class="alpha-color">50% transparan</div></div>
+      <code>background-color: rgba(23, 32, 51, .5);</code>
+    </article>
+
+    <article class="card">
+      <h3>Linear gradient</h3>
+      <div class="color-swatch gradient-color">linear-gradient</div>
+      <code>background: linear-gradient(90deg, #6750A4, #219678);</code>
+    </article>
+  </div>
+</section>
+
+<section>
+  <h2>5. TYPOGRAPHY &amp; TEXT</h2>
+
+  <div class="value-grid">
+    <article class="card">
+      <h3>text-align</h3>
+      <p class="text-left">LEFT</p>
+      <p class="text-center">CENTER</p>
+      <p class="text-right">RIGHT</p>
+    </article>
+
+    <article class="card">
+      <h3>text-transform</h3>
+      <p class="upper">hello world → uppercase</p>
+      <p class="lower">HELLO WORLD → lowercase</p>
+      <p class="capitalize">hello world → capitalize</p>
+    </article>
+
+    <article class="card">
+      <h3>line-height</h3>
+      <p class="line-height">Jarak antar baris dibuat lebih renggang supaya mudah melihat efek line-height.</p>
+    </article>
+
+    <article class="card">
+      <h3>letter-spacing</h3>
+      <p class="letter-spacing">JARAK HURUF</p>
+    </article>
+
+    <article class="card">
+      <h3>font-family</h3>
+      <p class="font-family-demo">Teks dengan keluarga font serif.</p>
+      <p class="font-family-sans">Teks dengan keluarga font sans-serif.</p>
+      <code>font-family: Georgia, serif;</code>
+    </article>
+
+    <article class="card">
+      <h3>font-size &amp; font-weight</h3>
+      <p class="font-size-demo">Ukuran 24px</p>
+      <p class="font-weight-demo">Ketebalan bold (700)</p>
+      <code>font-size: 24px; font-weight: 700;</code>
+    </article>
+
+    <article class="card">
+      <h3>font-style &amp; text-decoration</h3>
+      <p class="font-style-demo">Teks italic</p>
+      <p class="text-decoration-demo">Teks bergaris bawah</p>
+      <code>font-style: italic; text-decoration: underline;</code>
+    </article>
+
+    <article class="card">
+      <h3>word-spacing &amp; text-shadow</h3>
+      <p class="word-spacing-demo">Jarak antar kata</p>
+      <p class="text-shadow-demo">Bayangan pada teks</p>
+      <code>word-spacing: 8px; text-shadow: 2px 2px 3px #98a2b3;</code>
+    </article>
+
+    <article class="card">
+      <h3>white-space &amp; text-overflow</h3>
+      <p>Contoh teks panjang yang dipotong dengan elipsis saat tidak muat.</p>
+      <div class="text-overflow-demo">Teks ini sangat panjang dan tidak akan muat dalam satu baris.</div>
+      <code>white-space: nowrap; overflow: hidden; text-overflow: ellipsis;</code>
+    </article>
+
+    <article class="card">
+      <h3>word-break</h3>
+      <p>Kata panjang dapat dipatahkan agar tidak meluber dari container.</p>
+      <div class="word-break-demo">supercalifragilisticexpialidociousword</div>
+      <code>overflow-wrap: anywhere;</code>
+    </article>
+
+    <article class="card">
+      <h3>list-style</h3>
+      <ul class="list-style-demo"><li>Disc</li><li>Circle</li><li>Square</li></ul>
+      <code>list-style-type: square;</code>
+    </article>
+
+    <article class="card">
+      <h3>text-align &amp; text-indent</h3>
+      <p class="text-justify-demo">Teks rata kiri dan kanan membuat tepi paragraf tampak lebih rata. Indentasi memberi jarak pada awal paragraf untuk membantu membedakan blok teks.</p>
+      <code>text-align: justify; text-indent: 2em;</code>
+    </article>
+
+    <article class="card">
+      <h3>vertical-align</h3>
+      <p class="vertical-align-demo">Baseline <span>TOP</span> <span>BOTTOM</span> <span>MIDDLE</span></p>
+      <code>vertical-align: top | middle | bottom;</code>
+    </article>
+  </div>
+</section>
+
+<section>
+  <h2>6. UKURAN &amp; CSS UNITS</h2>
+  <p class="intro">Ukuran dapat memakai unit absolut seperti <code>px</code> atau unit relatif seperti <code>%</code>, <code>rem</code>, dan <code>vw</code>.</p>
+
+  <div class="value-grid">
+    <article class="card">
+      <h3>px vs %</h3>
+      <p>Pixel tetap; persentase mengikuti lebar parent.</p>
+      <div class="unit-stage">
+        <div class="unit-px">200px</div>
+        <div class="unit-percent">50%</div>
+      </div>
+      <code>width: 200px; /* dibandingkan */ width: 50%;</code>
+    </article>
+
+    <article class="card">
+      <h3>rem</h3>
+      <p>Ukuran font relatif pada font-size root (umumnya 16px).</p>
+      <div class="unit-stage rem-stage">
+        <span>1rem</span><span>1.5rem</span><span>2rem</span>
+      </div>
+      <code>font-size: 1rem; /* 1.5rem; 2rem */</code>
+    </article>
+
+    <article class="card">
+      <h3>em vs rem</h3>
+      <p>em mengikuti ukuran font parent; rem mengikuti ukuran font root.</p>
+      <div class="em-stage"><div>Parent 20px <span>1em</span><span>1rem</span></div></div>
+      <code>font-size: 1em; /* vs 1rem */</code>
+    </article>
+
+    <article class="card">
+      <h3>ch</h3>
+      <p>Unit ch kira-kira selebar karakter "0", berguna untuk membatasi panjang baris.</p>
+      <div class="ch-demo">Baris ini dibatasi dengan satuan ch agar panjangnya mudah dibaca.</div>
+      <code>max-width: 28ch;</code>
+    </article>
+
+    <article class="card">
+      <h3>vh</h3>
+      <p>1vh adalah 1% tinggi viewport; kotak memakai setengah tinggi viewport dengan batas.</p>
+      <div class="vh-demo">50vh</div>
+      <code>height: 50vh; min-height: 100px; max-height: 240px;</code>
+    </article>
+
+    <article class="card">
+      <h3>calc()</h3>
+      <p>calc() menggabungkan nilai dan unit untuk ukuran yang dihitung.</p>
+      <div class="calc-stage"><div>width: calc(100% - 40px)</div></div>
+      <code>width: calc(100% - 40px);</code>
+    </article>
+
+    <article class="card">
+      <h3>vw</h3>
+      <p>1vw adalah 1% lebar viewport. Ukuran ini memakai 30vw lalu dibatasi min dan max agar tetap terbaca.</p>
+      <div class="viewport-unit">30vw (dibatasi min/max)</div>
+      <code>width: min(80%, 30vw); min-width: 130px; max-width: 260px;</code>
+    </article>
+
+    <article class="card">
+      <h3>aspect-ratio</h3>
+      <p>Menjaga rasio lebar dan tinggi elemen.</p>
+      <div class="aspect-ratio-demo">16:9</div>
+      <code>aspect-ratio: 16 / 9;</code>
+    </article>
+
+    <article class="card">
+      <h3>min-width &amp; max-width</h3>
+      <p>Menentukan batas minimum dan maksimum lebar elemen.</p>
+      <div class="minmax-stage"><div>min-width: 120px; max-width: 220px;</div></div>
+      <code>width: 100%; min-width: 120px; max-width: 220px;</code>
+    </article>
+  </div>
+</section>
+
+<section>
+  <h2>7. BORDER &amp; OUTLINE</h2>
+
+  <div class="value-grid">
+    <article class="card">
+      <h3>border-style</h3>
+      <div class="border-examples">
+        <span class="border-solid">solid</span><span class="border-dashed">dashed</span>
+        <span class="border-dotted">dotted</span><span class="border-double">double</span>
+      </div>
+      <code>border: 4px solid | dashed | dotted | double;</code>
+    </article>
+
+    <article class="card">
+      <h3>border-width &amp; border-color</h3>
+      <div class="border-width-demo">Border tiap sisi berbeda</div>
+      <code>border-width: 2px 8px 5px 12px;</code>
+    </article>
+
+    <article class="card">
+      <h3>outline</h3>
+      <p>Outline digambar di luar border dan tidak mengubah ukuran layout.</p>
+      <div class="outline-stage"><div>OUTLINE</div></div>
+      <code>outline: 3px solid #219678; outline-offset: 4px;</code>
+    </article>
+  </div>
+</section>
+
+<section>
+  <h2>8. BACKGROUND, BORDER &amp; SHADOW</h2>
+
+  <div class="value-grid">
+    <article class="card">
+      <h3>background-color</h3>
+      <div class="background-color">BACKGROUND</div>
+    </article>
+
+    <article class="card">
+      <h3>background-size: cover</h3>
+      <div class="background-cover">COVER</div>
+    </article>
+
+    <article class="card">
+      <h3>border-radius</h3>
+      <div class="round-box">50%</div>
+    </article>
+
+    <article class="card">
+      <h3>box-shadow</h3>
+      <div class="shadow-box">SHADOW</div>
+    </article>
+
+    <article class="card">
+      <h3>background-repeat</h3>
+      <div class="background-repeat-demo">REPEAT</div>
+      <code>background-repeat: repeat;</code>
+    </article>
+
+    <article class="card">
+      <h3>background-position</h3>
+      <div class="background-position-demo">POSISI KANAN BAWAH</div>
+      <code>background-position: right 12px bottom 12px;</code>
+    </article>
+  </div>
+</section>
+
+<section>
+  <h2>9. OVERFLOW</h2>
+
+  <div class="value-grid">
+    <article class="card">
+      <h3>visible</h3>
+      <p>Content yang keluar tetap terlihat.</p>
+      <div class="overflow-box overflow-visible">CONTENT PANJANG KELUAR DARI KOTAK</div>
+      <code>overflow: visible;</code>
+    </article>
+
+    <article class="card">
+      <h3>hidden</h3>
+      <p>Content yang keluar dipotong.</p>
+      <div class="overflow-box overflow-hidden">CONTENT PANJANG KELUAR DARI KOTAK</div>
+      <code>overflow: hidden;</code>
+    </article>
+
+    <article class="card">
+      <h3>scroll</h3>
+      <p>Scrollbar selalu disediakan.</p>
+      <div class="overflow-box overflow-scroll">CONTENT PANJANG KELUAR DARI KOTAK. Scroll untuk melihat.</div>
+      <code>overflow: scroll;</code>
+    </article>
+
+    <article class="card">
+      <h3>auto</h3>
+      <p>Scrollbar muncul kalau memang dibutuhkan.</p>
+      <div class="overflow-box overflow-auto">CONTENT PANJANG KELUAR DARI KOTAK. Scroll untuk melihat.</div>
+      <code>overflow: auto;</code>
+    </article>
+  </div>
+</section>
+
+<section>
+  <h2>10. FLOW, FLOAT &amp; CLEAR</h2>
+  <p class="intro">Float membuat teks mengalir di samping elemen; clear memulai aliran di bawah float.</p>
+
+  <div class="value-grid">
+    <article class="card">
+      <h3>float: left</h3>
+      <div class="float-demo">
+        <span class="float-box">FLOAT</span>
+        <p>Paragraf mengalir di samping kotak yang di-float. Teks berlanjut mengikuti lebar ruang yang tersisa.</p>
+        <p class="clear-demo">Elemen ini memakai clear: both dan dimulai di bawah float.</p>
+      </div>
+      <code>float: left; clear: both;</code>
+    </article>
+  </div>
+</section>
+
+<section>
+  <h2>11. POSITION</h2>
+  <p class="intro">
+    Nilai <code>top</code>, <code>right</code>, <code>bottom</code>, dan <code>left</code>
+    bekerja pada elemen yang diposisikan. <code>z-index</code> mengatur urutan tumpukannya.
+  </p>
+
+  <div class="value-grid">
+    <article class="card">
+      <h3>static</h3>
+      <p>Posisi normal. top/left tidak memindahkan elemen.</p>
+      <div class="position-stage"><i>A</i><i>B</i><i>C</i></div>
+      <code>position: static;</code>
+    </article>
+
+    <article class="card">
+      <h3>relative</h3>
+      <p>Digeser dari tempat asal, tetapi tempat asalnya masih dianggap ada.</p>
+      <div class="position-stage"><i>A</i><i class="relative-item">B</i><i>C</i></div>
+      <code>position: relative; top: 25px; left: 25px;</code>
+    </article>
+
+    <article class="card">
+      <h3>absolute</h3>
+      <p>Bebas ditempatkan di dalam parent yang menjadi patokan.</p>
+      <div class="position-stage parent"><i>A</i><i class="absolute-item">B</i><i>C</i></div>
+      <code>position: absolute; right: 10px; bottom: 10px;</code>
+    </article>
+
+    <article class="card">
+      <h3>fixed</h3>
+      <p>Nempel ke layar. Tombol FIXED di pojok kanan bawah adalah contohnya.</p>
+      <div class="position-stage"><i>A</i><i>B</i><i>C</i></div>
+      <code>position: fixed;</code>
+    </article>
+
+    <article class="card">
+      <h3>sticky</h3>
+      <p>Normal dulu, lalu menempel ketika mencapai batas saat area ini di-scroll.</p>
+      <div class="sticky-stage">
+        <div>Scroll area ini ↕</div>
+        <div class="sticky-item">STICKY</div>
+        <p>Konten sebelum batas...</p><p>Konten setelah batas...</p><p>Konten berlanjut...</p>
+      </div>
+      <code>position: sticky; top: 0;</code>
+    </article>
+
+    <article class="card">
+      <h3>inset</h3>
+      <p>Shorthand untuk menentukan jarak posisi pada keempat sisi sekaligus.</p>
+      <div class="position-stage inset-stage">
+        <i>A</i><i class="inset-item">INSET</i><i>C</i>
+      </div>
+      <code>position: absolute; inset: 10px 10px auto auto;</code>
+    </article>
+
+    <article class="card">
+      <h3>z-index</h3>
+      <p>Elemen dengan angka lebih besar tampil di depan.</p>
+      <div class="position-stage z-index-stage">
+        <i class="stack-item stack-back">1</i>
+        <i class="stack-item stack-front">2</i>
+        <i class="stack-item stack-middle">3</i>
+      </div>
+      <code>position: relative; z-index: 2;</code>
+    </article>
+  </div>
+</section>
+
+<section>
+  <h2>12. FLEXBOX — FLEX-DIRECTION</h2>
+
+  <div class="value-grid">
+    <article class="card">
+      <h3>row</h3>
+      <p>Kiri → kanan.</p>
+      <div class="flex-direction-row"><i>A</i><i>B</i><i>C</i></div>
+      <code>flex-direction: row;</code>
+    </article>
+
+    <article class="card">
+      <h3>row-reverse</h3>
+      <p>Kanan → kiri.</p>
+      <div class="flex-direction-row-reverse"><i>A</i><i>B</i><i>C</i></div>
+      <code>flex-direction: row-reverse;</code>
+    </article>
+
+    <article class="card">
+      <h3>column</h3>
+      <p>Atas → bawah.</p>
+      <div class="flex-direction-column"><i>A</i><i>B</i><i>C</i></div>
+      <code>flex-direction: column;</code>
+    </article>
+
+    <article class="card">
+      <h3>column-reverse</h3>
+      <p>Bawah → atas.</p>
+      <div class="flex-direction-column-reverse"><i>A</i><i>B</i><i>C</i></div>
+      <code>flex-direction: column-reverse;</code>
+    </article>
+  </div>
+</section>
+
+<section>
+  <h2>13. FLEXBOX — JUSTIFY-CONTENT</h2>
+  <p class="intro">
+    Untuk contoh di bawah, arah item adalah <b>kiri → kanan</b>.
+    Jadi <code>justify-content</code> mengatur item secara <b>horizontal</b>.
+  </p>
+
+  <div class="value-grid">
+
+    <article class="card">
+      <h3>flex-start</h3>
+      <p>Semua item dikumpulkan di <b>kiri</b>.</p>
+      <div class="flex-stage justify-flex-start">
+        <i>A</i><i>B</i><i>C</i>
+      </div>
+      <code>justify-content: flex-start;</code>
+    </article>
+
+    <article class="card">
+      <h3>center</h3>
+      <p>Semua item dikumpulkan di <b>tengah</b>.</p>
+      <div class="flex-stage justify-center">
+        <i>A</i><i>B</i><i>C</i>
+      </div>
+      <code>justify-content: center;</code>
+    </article>
+
+    <article class="card">
+      <h3>flex-end</h3>
+      <p>Semua item dikumpulkan di <b>kanan</b>.</p>
+      <div class="flex-stage justify-flex-end">
+        <i>A</i><i>B</i><i>C</i>
+      </div>
+      <code>justify-content: flex-end;</code>
+    </article>
+
+    <article class="card">
+      <h3>space-between</h3>
+      <p>Item pertama di kiri, terakhir di kanan. Ruang di tengah dibagi.</p>
+      <div class="flex-stage justify-between">
+        <i>A</i><i>B</i><i>C</i>
+      </div>
+      <code>justify-content: space-between;</code>
+    </article>
+
+    <article class="card">
+      <h3>space-around</h3>
+      <p>Setiap item punya ruang di kiri dan kanan.</p>
+      <div class="flex-stage justify-around">
+        <i>A</i><i>B</i><i>C</i>
+      </div>
+      <code>justify-content: space-around;</code>
+    </article>
+
+    <article class="card">
+      <h3>space-evenly</h3>
+      <p>Semua jarak dibuat <b>benar-benar sama</b>.</p>
+      <div class="flex-stage justify-evenly">
+        <i>A</i><i>B</i><i>C</i>
+      </div>
+      <code>justify-content: space-evenly;</code>
+    </article>
+
+  </div>
+</section>
+
+<section>
+  <h2>14. FLEXBOX — ALIGN-ITEMS</h2>
+  <p class="intro">
+    Di sini container dibuat tinggi supaya perbedaan posisi <b>atas / tengah / bawah</b> terlihat jelas.
+  </p>
+
+  <div class="value-grid">
+
+    <article class="card">
+      <h3>flex-start</h3>
+      <p>Item berada di <b>atas</b>.</p>
+      <div class="flex-tall align-start">
+        <i>A</i><i class="tall-item">B</i><i>C</i>
+      </div>
+      <code>align-items: flex-start;</code>
+    </article>
+
+    <article class="card">
+      <h3>center</h3>
+      <p>Item berada di <b>tengah</b>.</p>
+      <div class="flex-tall align-center">
+        <i>A</i><i class="tall-item">B</i><i>C</i>
+      </div>
+      <code>align-items: center;</code>
+    </article>
+
+    <article class="card">
+      <h3>flex-end</h3>
+      <p>Item berada di <b>bawah</b>.</p>
+      <div class="flex-tall align-end">
+        <i>A</i><i class="tall-item">B</i><i>C</i>
+      </div>
+      <code>align-items: flex-end;</code>
+    </article>
+
+    <article class="card">
+      <h3>stretch</h3>
+      <p>Item yang tidak punya tinggi akan <b>melebar mengikuti tinggi container</b>.</p>
+      <div class="flex-tall align-stretch">
+        <i>A</i><i>B</i><i>C</i>
+      </div>
+      <code>align-items: stretch;</code>
+    </article>
+
+    <article class="card">
+      <h3>baseline</h3>
+      <p>Item disejajarkan berdasarkan <b>garis dasar tulisan</b>.</p>
+      <div class="flex-tall align-baseline">
+        <i class="text-small">A</i><i class="text-big">B</i><i class="text-medium">C</i>
+      </div>
+      <code>align-items: baseline;</code>
+    </article>
+
+  </div>
+</section>
+
+<section>
+  <h2>15. FLEXBOX — WRAP</h2>
+
+  <div class="value-grid">
+    <article class="card">
+      <h3>nowrap</h3>
+      <p>Semua item dipaksa tetap satu baris.</p>
+      <div class="wrap-stage nowrap"><i>A</i><i>B</i><i>C</i><i>D</i><i>E</i></div>
+      <code>flex-wrap: nowrap;</code>
+    </article>
+
+    <article class="card">
+      <h3>wrap</h3>
+      <p>Kalau tidak cukup, item turun ke baris berikutnya.</p>
+      <div class="wrap-stage wrap"><i>A</i><i>B</i><i>C</i><i>D</i><i>E</i></div>
+      <code>flex-wrap: wrap;</code>
+    </article>
+
+    <article class="card">
+      <h3>wrap-reverse</h3>
+      <p>Wrap tetap terjadi, tetapi arah barisnya dibalik.</p>
+      <div class="wrap-stage wrap-reverse"><i>A</i><i>B</i><i>C</i><i>D</i><i>E</i></div>
+      <code>flex-wrap: wrap-reverse;</code>
+    </article>
+  </div>
+</section>
+
+<section>
+  <h2>16. FLEXBOX — ALIGN-CONTENT</h2>
+  <p class="intro">
+    <b>Bedakan:</b> <code>align-items</code> mengatur item di dalam baris.
+    <code>align-content</code> mengatur <b>kumpulan baris</b> ketika ada beberapa baris.
+    Karena itu contoh ini harus memakai <code>flex-wrap: wrap</code>.
+  </p>
+
+  <div class="value-grid">
+    <article class="card">
+      <h3>flex-start</h3>
+      <div class="multi-row align-content-start"><i>A</i><i>B</i><i>C</i><i>D</i><i>E</i><i>F</i></div>
+      <code>align-content: flex-start;</code>
+    </article>
+
+    <article class="card">
+      <h3>center</h3>
+      <div class="multi-row align-content-center"><i>A</i><i>B</i><i>C</i><i>D</i><i>E</i><i>F</i></div>
+      <code>align-content: center;</code>
+    </article>
+
+    <article class="card">
+      <h3>flex-end</h3>
+      <div class="multi-row align-content-end"><i>A</i><i>B</i><i>C</i><i>D</i><i>E</i><i>F</i></div>
+      <code>align-content: flex-end;</code>
+    </article>
+
+    <article class="card">
+      <h3>space-between</h3>
+      <div class="multi-row align-content-between"><i>A</i><i>B</i><i>C</i><i>D</i><i>E</i><i>F</i></div>
+      <code>align-content: space-between;</code>
+    </article>
+
+    <article class="card">
+      <h3>space-around</h3>
+      <div class="multi-row align-content-around"><i>A</i><i>B</i><i>C</i><i>D</i><i>E</i><i>F</i></div>
+      <code>align-content: space-around;</code>
+    </article>
+
+    <article class="card">
+      <h3>space-evenly</h3>
+      <div class="multi-row align-content-evenly"><i>A</i><i>B</i><i>C</i><i>D</i><i>E</i><i>F</i></div>
+      <code>align-content: space-evenly;</code>
+    </article>
+
+    <article class="card">
+      <h3>stretch</h3>
+      <div class="multi-row align-content-stretch"><i>A</i><i>B</i><i>C</i><i>D</i><i>E</i><i>F</i></div>
+      <code>align-content: stretch;</code>
+    </article>
+  </div>
+</section>
+
+<section>
+  <h2>17. FLEX ITEM — GROW, SHRINK &amp; BASIS</h2>
+  <p class="intro">Properti ini mengatur bagaimana ukuran tiap item flex berubah untuk membagi ruang atau menangani ruang yang kurang.</p>
+
+  <div class="value-grid">
+    <article class="card">
+      <h3>flex-grow</h3>
+      <p>Item B mengambil ruang ekstra dua kali lebih banyak dari A dan C.</p>
+      <div class="flex-item-stage grow-demo"><span>A</span><span>B (2)</span><span>C</span></div>
+      <code>A { flex-grow: 0 } B { flex-grow: 2 } C { flex-grow: 0 }</code>
+    </article>
+
+    <article class="card">
+      <h3>flex-shrink</h3>
+      <p>Item B tidak menyusut, sementara A dan C menyesuaikan ruang yang tersedia.</p>
+      <div class="flex-item-stage shrink-demo"><span>A</span><span>B (0)</span><span>C</span></div>
+      <code>A { flex-shrink: 1 } B { flex-shrink: 0 } C { flex-shrink: 1 }</code>
+    </article>
+
+    <article class="card">
+      <h3>flex-basis</h3>
+      <p>Basis awal tiap item sebelum ruang ekstra dibagi.</p>
+      <div class="flex-item-stage basis-demo"><span>120px</span><span>50%</span><span>auto</span></div>
+      <code>flex-basis: 120px; /* atau 50% / auto */</code>
+    </article>
+
+    <article class="card">
+      <h3>align-self</h3>
+      <p>Menimpa alignment untuk satu item tertentu.</p>
+      <div class="flex-item-stage align-self-demo"><span>DEFAULT</span><span>START</span><span>END</span></div>
+      <code>align-self: flex-start | center | flex-end;</code>
+    </article>
+
+    <article class="card">
+      <h3>order</h3>
+      <p>Mengubah urutan visual item tanpa mengubah urutan HTML.</p>
+      <div class="flex-item-stage order-demo"><span class="order-one">HTML 1</span><span class="order-two">HTML 2</span><span class="order-three">HTML 3</span></div>
+      <code>order: -1; /* urutan visual berbeda dari DOM */</code>
+    </article>
+
+    <article class="card">
+      <h3>gap</h3>
+      <p>Jarak konsisten di antara item flex tanpa margin pada item.</p>
+      <div class="flex-item-stage gap-demo"><span>A</span><span>B</span><span>C</span></div>
+      <code>gap: 16px;</code>
+    </article>
+  </div>
+</section>
+
+<section>
+  <h2>18. GRID — FRACTION (fr)</h2>
+
+  <article class="card">
+    <h3>grid-template-columns: 1fr 2fr 1fr</h3>
+    <p class="intro">
+      <b>fr = bagian dari ruang yang tersedia.</b>
+      Total bagian = 1 + 2 + 1 = <b>4 bagian</b>.
+    </p>
+
+    <div class="fr-visual">
+      <div class="fr-column one">
+        <strong>1fr</strong>
+        <span>1 bagian</span>
+        <small>25%</small>
+      </div>
+      <div class="fr-column two">
+        <strong>2fr</strong>
+        <span>2 bagian</span>
+        <small>50%</small>
+      </div>
+      <div class="fr-column one">
+        <strong>1fr</strong>
+        <span>1 bagian</span>
+        <small>25%</small>
+      </div>
+    </div>
+
+    <div class="formula">
+      <b>1fr + 2fr + 1fr = 4fr</b><br>
+      Kolom pertama = 1/4 ruang<br>
+      Kolom kedua = 2/4 ruang<br>
+      Kolom ketiga = 1/4 ruang
+    </div>
+
+    <code>grid-template-columns: 1fr 2fr 1fr;</code>
+  </article>
+
+  <div class="value-grid">
+    <article class="card">
+      <h3>1fr 1fr</h3>
+      <p>Dua kolom sama besar.</p>
+      <div class="grid-fr two-equal">
+        <div>1fr</div><div>1fr</div>
+      </div>
+      <code>grid-template-columns: 1fr 1fr;</code>
+    </article>
+
+    <article class="card">
+      <h3>1fr 2fr</h3>
+      <p>Kolom kedua 2× lebih besar.</p>
+      <div class="grid-fr one-two">
+        <div>1fr</div><div>2fr</div>
+      </div>
+      <code>grid-template-columns: 1fr 2fr;</code>
+    </article>
+
+    <article class="card">
+      <h3>2fr 1fr</h3>
+      <p>Kolom pertama 2× lebih besar.</p>
+      <div class="grid-fr two-one">
+        <div>2fr</div><div>1fr</div>
+      </div>
+      <code>grid-template-columns: 2fr 1fr;</code>
+    </article>
+
+    <article class="card">
+      <h3>100px 1fr</h3>
+      <p>Kolom pertama tetap 100px. Sisanya diberikan ke 1fr.</p>
+      <div class="grid-fr px-fr">
+        <div>100px</div><div>1fr</div>
+      </div>
+      <code>grid-template-columns: 100px 1fr;</code>
+    </article>
+
+    <article class="card">
+      <h3>repeat(3, 1fr)</h3>
+      <p>Membuat 3 kolom dengan ukuran sama.</p>
+      <div class="grid-fr repeat-three">
+        <div>1fr</div><div>1fr</div><div>1fr</div>
+      </div>
+      <code>grid-template-columns: repeat(3, 1fr);</code>
+    </article>
+
+    <article class="card">
+      <h3>minmax(150px, 1fr)</h3>
+      <p>Minimal 150px, tetapi boleh membesar sampai 1fr.</p>
+      <div class="grid-fr minmax-demo">
+        <div>min 150px</div><div>1fr</div>
+      </div>
+      <code>grid-template-columns: minmax(150px, 1fr) 1fr;</code>
+    </article>
+  </div>
+</section>
+
+<section>
+  <h2>19. GRID — JUSTIFY-ITEMS</h2>
+  <p class="intro">
+    <b>justify-items</b> mengatur posisi <b>isi di dalam setiap kotak grid</b> secara horizontal.
+    Perhatikan kotaknya tetap di tempatnya; yang bergerak hanya isinya.
+  </p>
+
+  <div class="value-grid">
+    <article class="card">
+      <h3>start</h3>
+      <div class="grid-cells ji-start"><i>A</i><i>B</i><i>C</i></div>
+      <code>justify-items: start;</code>
+    </article>
+
+    <article class="card">
+      <h3>center</h3>
+      <div class="grid-cells ji-center"><i>A</i><i>B</i><i>C</i></div>
+      <code>justify-items: center;</code>
+    </article>
+
+    <article class="card">
+      <h3>end</h3>
+      <div class="grid-cells ji-end"><i>A</i><i>B</i><i>C</i></div>
+      <code>justify-items: end;</code>
+    </article>
+
+    <article class="card">
+      <h3>stretch</h3>
+      <div class="grid-cells ji-stretch"><i>A</i><i>B</i><i>C</i></div>
+      <code>justify-items: stretch;</code>
+    </article>
+  </div>
+</section>
+
+<section>
+  <h2>20. GRID — ALIGN-ITEMS</h2>
+  <p class="intro">
+    <b>align-items</b> mengatur posisi <b>isi di dalam setiap kotak grid</b> secara vertikal.
+  </p>
+
+  <div class="value-grid">
+    <article class="card">
+      <h3>start</h3>
+      <div class="grid-cells tall-grid gi-start"><i>A</i><i>B</i><i>C</i></div>
+      <code>align-items: start;</code>
+    </article>
+
+    <article class="card">
+      <h3>center</h3>
+      <div class="grid-cells tall-grid gi-center"><i>A</i><i>B</i><i>C</i></div>
+      <code>align-items: center;</code>
+    </article>
+
+    <article class="card">
+      <h3>end</h3>
+      <div class="grid-cells tall-grid gi-end"><i>A</i><i>B</i><i>C</i></div>
+      <code>align-items: end;</code>
+    </article>
+
+    <article class="card">
+      <h3>stretch</h3>
+      <div class="grid-cells tall-grid gi-stretch"><i>A</i><i>B</i><i>C</i></div>
+      <code>align-items: stretch;</code>
+    </article>
+  </div>
+</section>
+
+<section>
+  <h2>21. GRID — JUSTIFY-CONTENT</h2>
+  <p class="intro">
+    Ini berbeda dengan <code>justify-items</code>.
+    <b>justify-content</b> memindahkan <b>seluruh kumpulan grid</b>, bukan isi di dalam cell.
+  </p>
+
+  <div class="value-grid">
+    <article class="card">
+      <h3>start</h3>
+      <div class="grid-content gc-start"><i>A</i><i>B</i><i>C</i></div>
+      <code>justify-content: start;</code>
+    </article>
+
+    <article class="card">
+      <h3>center</h3>
+      <div class="grid-content gc-center"><i>A</i><i>B</i><i>C</i></div>
+      <code>justify-content: center;</code>
+    </article>
+
+    <article class="card">
+      <h3>end</h3>
+      <div class="grid-content gc-end"><i>A</i><i>B</i><i>C</i></div>
+      <code>justify-content: end;</code>
+    </article>
+
+    <article class="card">
+      <h3>space-between</h3>
+      <div class="grid-content gc-between"><i>A</i><i>B</i><i>C</i></div>
+      <code>justify-content: space-between;</code>
+    </article>
+
+    <article class="card">
+      <h3>space-around</h3>
+      <div class="grid-content gc-around"><i>A</i><i>B</i><i>C</i></div>
+      <code>justify-content: space-around;</code>
+    </article>
+
+    <article class="card">
+      <h3>space-evenly</h3>
+      <div class="grid-content gc-evenly"><i>A</i><i>B</i><i>C</i></div>
+      <code>justify-content: space-evenly;</code>
+    </article>
+  </div>
+</section>
+
+<section>
+  <h2>22. GRID — ALIGN-CONTENT</h2>
+  <p class="intro">
+    <b>align-content</b> memindahkan <b>seluruh kumpulan baris grid</b> ke atas, tengah, bawah, atau diberi jarak.
+  </p>
+
+  <div class="value-grid">
+    <article class="card">
+      <h3>start</h3>
+      <div class="grid-content vertical gc-v-start"><i>A</i><i>B</i><i>C</i><i>D</i></div>
+      <code>align-content: start;</code>
+    </article>
+
+    <article class="card">
+      <h3>center</h3>
+      <div class="grid-content vertical gc-v-center"><i>A</i><i>B</i><i>C</i><i>D</i></div>
+      <code>align-content: center;</code>
+    </article>
+
+    <article class="card">
+      <h3>end</h3>
+      <div class="grid-content vertical gc-v-end"><i>A</i><i>B</i><i>C</i><i>D</i></div>
+      <code>align-content: end;</code>
+    </article>
+
+    <article class="card">
+      <h3>space-between</h3>
+      <div class="grid-content vertical gc-v-between"><i>A</i><i>B</i><i>C</i><i>D</i></div>
+      <code>align-content: space-between;</code>
+    </article>
+
+    <article class="card">
+      <h3>space-around</h3>
+      <div class="grid-content vertical gc-v-around"><i>A</i><i>B</i><i>C</i><i>D</i></div>
+      <code>align-content: space-around;</code>
+    </article>
+
+    <article class="card">
+      <h3>space-evenly</h3>
+      <div class="grid-content vertical gc-v-evenly"><i>A</i><i>B</i><i>C</i><i>D</i></div>
+      <code>align-content: space-evenly;</code>
+    </article>
+  </div>
+</section>
+
+<section>
+  <h2>23. GRID — PLACE-ITEMS &amp; PLACE-CONTENT</h2>
+
+  <div class="value-grid">
+    <article class="card">
+      <h3>place-items: center</h3>
+      <p>Shortcut: <code>align-items + justify-items</code>.</p>
+      <div class="grid-cells tall-grid place-items-center"><i>A</i><i>B</i><i>C</i></div>
+      <code>place-items: center;</code>
+    </article>
+
+    <article class="card">
+      <h3>place-content: center</h3>
+      <p>Shortcut: <code>align-content + justify-content</code>.</p>
+      <div class="grid-content place-content-center"><i>A</i><i>B</i><i>C</i></div>
+      <code>place-content: center;</code>
+    </article>
+  </div>
+</section>
+
+<section>
+  <h2>24. GRID — GRID-COLUMN & GRID-ROW</h2>
+
+  <div class="value-grid">
+    <article class="card">
+      <h3>grid-column: span 2</h3>
+      <p>A mengambil lebar <b>2 kolom</b>.</p>
+      <div class="span-grid column-span">
+        <i class="span-column">A<br><small>2 kolom</small></i>
+        <i>B</i><i>C</i>
+      </div>
+      <code>grid-column: span 2;</code>
+    </article>
+
+    <article class="card">
+      <h3>grid-row: span 2</h3>
+      <p>A mengambil tinggi <b>2 baris</b>.</p>
+      <div class="span-grid row-span">
+        <i class="span-row">A<br><small>2 baris</small></i>
+        <i>B</i><i>C</i><i>D</i>
+      </div>
+      <code>grid-row: span 2;</code>
+    </article>
+  </div>
+</section>
+
+<section>
+  <h2>25. GRID LANJUTAN — AUTO FLOW &amp; TEMPLATE AREAS</h2>
+
+  <div class="value-grid">
+    <article class="card">
+      <h3>grid-auto-flow: row</h3>
+      <div class="auto-flow-stage auto-flow-row"><i>A</i><i>B</i><i>C</i><i>D</i><i>E</i></div>
+      <code>grid-auto-flow: row;</code>
+    </article>
+
+    <article class="card">
+      <h3>grid-auto-flow: column</h3>
+      <div class="auto-flow-stage auto-flow-column"><i>A</i><i>B</i><i>C</i><i>D</i><i>E</i></div>
+      <code>grid-auto-flow: column;</code>
+    </article>
+
+    <article class="card">
+      <h3>grid-template-areas</h3>
+      <div class="template-area-demo">
+        <div class="area-header">HEADER</div><div class="area-sidebar">SIDE</div>
+        <div class="area-main">MAIN</div><div class="area-footer">FOOTER</div>
+      </div>
+      <code>"header header" "sidebar main" "footer footer"</code>
+    </article>
+
+    <article class="card">
+      <h3>auto-fit vs auto-fill</h3>
+      <p>Keduanya membuat kolom responsif; auto-fit merapatkan track kosong, auto-fill mempertahankannya.</p>
+      <div class="auto-repeat-compare">
+        <div><b>auto-fit</b><div class="auto-repeat-demo auto-fit-demo"><span>A</span><span>B</span></div></div>
+        <div><b>auto-fill</b><div class="auto-repeat-demo auto-fill-demo"><span>A</span><span>B</span></div></div>
+      </div>
+      <code>repeat(auto-fit, minmax(55px, 1fr)); /* dibanding auto-fill */</code>
+    </article>
+  </div>
+</section>
+
+<section>
+  <h2>26. RESPONSIVE DESIGN &amp; MEDIA QUERY</h2>
+  <p class="intro">Resize viewport untuk melihat layout dan gaya berubah pada breakpoint.</p>
+
+  <div class="value-grid">
+    <article class="card">
+      <h3>Breakpoint</h3>
+      <div class="responsive-stage">
+        <div class="responsive-tile">KARTU A</div>
+        <div class="responsive-tile">KARTU B</div>
+        <div class="responsive-tile">KARTU C</div>
+      </div>
+      <code>@media (max-width: 700px) { grid-template-columns: 1fr; }</code>
+    </article>
+
+    <article class="card">
+      <h3>Fluid sizing dengan clamp()</h3>
+      <div class="clamp-demo">Teks responsif</div>
+      <code>font-size: clamp(1rem, 4vw, 2rem);</code>
+    </article>
+  </div>
+</section>
+
+<section>
+  <h2>27. TRANSFORM</h2>
+
+  <div class="value-grid">
+    <article class="card">
+      <h3>translate</h3>
+      <div class="transform-stage"><i class="translate">MOVE</i></div>
+      <code>transform: translate(25px, 15px);</code>
+    </article>
+
+    <article class="card">
+      <h3>scale</h3>
+      <div class="transform-stage"><i class="scale">ZOOM</i></div>
+      <code>transform: scale(1.3);</code>
+    </article>
+
+    <article class="card">
+      <h3>rotate</h3>
+      <div class="transform-stage"><i class="rotate">TURN</i></div>
+      <code>transform: rotate(15deg);</code>
+    </article>
+
+    <article class="card">
+      <h3>skew &amp; transform-origin</h3>
+      <div class="transform-stage"><i class="skew">SKEW</i></div>
+      <code>transform: skew(-12deg); transform-origin: center;</code>
+    </article>
+  </div>
+</section>
+
+<section>
+  <h2>28. FILTER &amp; GRADIENT</h2>
+
+  <div class="value-grid">
+    <article class="card">
+      <h3>filter</h3>
+      <div class="filter-stage">
+        <div class="filter-sample filter-blur">blur</div>
+        <div class="filter-sample filter-grayscale">grayscale</div>
+        <div class="filter-sample filter-brightness">brightness</div>
+      </div>
+      <code>filter: blur(2px) | grayscale(1) | brightness(1.3);</code>
+    </article>
+
+    <article class="card">
+      <h3>radial &amp; conic gradient</h3>
+      <div class="gradient-examples"><div class="radial-gradient-demo">radial</div><div class="conic-gradient-demo">conic</div></div>
+      <code>radial-gradient(circle, ...); conic-gradient(...);</code>
+    </article>
+
+    <article class="card">
+      <h3>backdrop-filter</h3>
+      <div class="backdrop-stage"><div>Frosted glass: backdrop-filter: blur(6px)</div></div>
+      <code>backdrop-filter: blur(6px);</code>
+    </article>
+  </div>
+</section>
+
+<section>
+  <h2>29. TRANSITION &amp; ANIMATION</h2>
+  <p class="intro">Arahkan pointer atau fokuskan tombol untuk melihat transition. Animasi berjalan otomatis.</p>
+
+  <div class="value-grid">
+    <article class="card">
+      <h3>transition</h3>
+      <div class="transition-stage"><button class="transition-button" type="button">HOVER / FOCUS</button></div>
+      <code>transition: transform .3s ease, background-color .3s ease;</code>
+    </article>
+
+    <article class="card">
+      <h3>transition-timing-function</h3>
+      <div class="timing-stage">
+        <div><span>linear</span><i class="timing-ball timing-linear"></i></div>
+        <div><span>ease</span><i class="timing-ball timing-ease"></i></div>
+      </div>
+      <code>transition: transform 1.5s linear; /* atau ease */</code>
+    </article>
+
+    <article class="card">
+      <h3>@keyframes &amp; animation</h3>
+      <div class="animation-stage"><div class="animation-ball"></div></div>
+      <code>animation: bounce 1s ease-in-out infinite alternate;</code>
+    </article>
+
+    <article class="card">
+      <h3>animation-duration, delay &amp; iteration</h3>
+      <div class="animation-stage"><div class="animation-delay-ball"></div></div>
+      <code>animation-duration: 2s; animation-delay: .5s; animation-iteration-count: 2;</code>
+    </article>
+  </div>
+</section>
+
+<section>
+  <h2>30. CSS VARIABLES &amp; INTERACTION</h2>
+
+  <div class="value-grid">
+    <article class="card">
+      <h3>Custom properties</h3>
+      <p>Variabel didefinisikan dengan <code>--nama</code> dan digunakan dengan <code>var()</code>.</p>
+      <div class="variable-demo">Warna dari variabel CSS</div>
+      <code>--demo-color: #6750a4; background: var(--demo-color);</code>
+    </article>
+
+    <article class="card">
+      <h3>:hover &amp; :focus-visible</h3>
+      <p>Keadaan interaktif yang dapat digunakan untuk mouse dan keyboard.</p>
+      <div class="interaction-stage"><button class="interaction-button" type="button">HOVER / TAB KE SINI</button></div>
+      <code>button:hover, button:focus-visible { ... }</code>
+    </article>
+  </div>
+</section>
+
+</main>
+
+<div class="fixed-button">FIXED</div>
+
+<footer>CSS Visual Playground — edit style.css untuk bereksperimen.</footer>
+
+</body>
+</html>
