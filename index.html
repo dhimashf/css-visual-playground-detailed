@@ -31,11 +31,13 @@
 <main>
 
 <section class="dependency-section">
-  <h2>CSS PROPERTY DEPENDENCY MAP</h2>
-  <p class="intro">CSS property tidak berdiri sendiri. Sebelum memakai property, lihat prerequisite → context → property → effect.</p>
+  <h2>PETA INTERAKTIF: DARI DISPLAY KE PROPERTI CSS</h2>
+  <p class="intro">Properti CSS tidak berdiri sendiri. Ikuti urutannya: syarat awal → tempat aturan bekerja → aturan CSS → hasil yang terlihat.</p>
+  <p class="dependency-hint"><span aria-hidden="true">👆</span> Klik kotak untuk membuka penjelasan dan menuju materi. Bisa juga pilih kotak dengan tombol Tab, lalu tekan Enter atau Spasi.</p>
 
-  <div class="dependency-flow" aria-label="Dependency flowchart for CSS layout properties">
+  <div class="dependency-flow" aria-label="Peta interaktif hubungan display dan properti layout">
     <div class="flow-root">DISPLAY</div>
+    <div class="flow-connector" aria-hidden="true">↓ Pilih cara menyusun elemen</div>
     <div class="flow-branch">
       <div class="flow-node">block</div>
       <div class="flow-node">inline</div>
@@ -43,60 +45,83 @@
       <div class="flow-node highlight">grid</div>
     </div>
     <div class="flow-subtree">
-      <div class="flow-node">flex-direction</div>
-      <div class="flow-node">flex-wrap</div>
-      <div class="flow-node">justify-content</div>
-      <div class="flow-node">align-items</div>
-      <div class="flow-node">align-content</div>
-      <div class="flow-node">gap</div>
-      <div class="flow-node">grid-template-columns</div>
-      <div class="flow-node">grid-template-rows</div>
-      <div class="flow-node">grid-template-areas</div>
+      <div class="flow-group">
+        <h3>Jika memilih <code>display: flex</code></h3>
+        <p>Susun item terutama dalam satu arah.</p>
+        <div class="flow-group-nodes">
+          <div class="flow-node">flex-direction</div>
+          <div class="flow-node">flex-wrap</div>
+          <div class="flow-node">justify-content</div>
+          <div class="flow-node">align-items</div>
+          <div class="flow-node">align-content</div>
+          <div class="flow-node">gap</div>
+        </div>
+      </div>
+      <div class="flow-group">
+        <h3>Jika memilih <code>display: grid</code></h3>
+        <p>Atur susunan baris dan kolom.</p>
+        <div class="flow-group-nodes">
+          <div class="flow-node">grid-template-columns</div>
+          <div class="flow-node">grid-template-rows</div>
+          <div class="flow-node">grid-template-areas</div>
+        </div>
+      </div>
     </div>
   </div>
 
   <div class="dependency-grid">
     <article class="card dependency-card">
       <h3>FLEX-WRAP</h3>
-      <div class="property-status compact"><span class="status-pill ok">✓ CONTEXT READY</span><span class="requires-pill">Requires: [ display: flex ]</span></div>
+      <div class="property-status compact"><span class="status-pill ok">✓ SYARAT TERPENUHI</span><span class="requires-pill">Butuh dulu: [ display: flex ]</span></div>
       <p><strong>Butuh:</strong> <code>display: flex;</code></p>
-      <p><strong>Property:</strong> <code>flex-wrap: wrap;</code></p>
-      <p><strong>Fungsi:</strong> Mengizinkan flex item pindah ke baris/kolom berikutnya saat ruang tidak cukup.</p>
+      <p><strong>Aturan CSS:</strong> <code>flex-wrap: wrap;</code></p>
+      <p><strong>Fungsi:</strong> Mengizinkan item Flexbox pindah ke baris/kolom berikutnya saat ruang tidak cukup.</p>
       <p><strong>Urutan belajar:</strong> display → flex → flex-wrap</p>
     </article>
     <article class="card dependency-card">
       <h3>JUSTIFY-CONTENT</h3>
-      <div class="property-status compact"><span class="status-pill ok">✓ MAIN AXIS ACTIVE</span><span class="requires-pill">Requires: [ display: flex / grid ]</span></div>
-      <p><strong>Konsep:</strong> main axis / container alignment</p>
-      <p><strong>Fungsi:</strong> Mengatur posisi/distribusi item di sepanjang main axis.</p>
-      <p><strong>Urutan belajar:</strong> display → flex → axis → justify-content</p>
+      <div class="property-status compact"><span class="status-pill ok">✓ ARAH UTAMA AKTIF</span><span class="requires-pill">Butuh dulu: [ display: flex / grid ]</span></div>
+      <p><strong>Konsep:</strong> sumbu utama (arah susunan item)</p>
+      <p><strong>Fungsi:</strong> Mengatur posisi atau jarak item sepanjang arah susunannya.</p>
+      <p><strong>Urutan belajar:</strong> display → flex → arah sumbu → justify-content</p>
     </article>
-    <article class="card dependency-card">
-      <h3>GRID-TEMPLATE-COLUMNS</h3>
-      <div class="property-status compact"><span class="status-pill ok">✓ GRID CONTEXT</span><span class="requires-pill">Requires: [ display: grid ]</span></div>
-      <p><strong>Property:</strong> <code>grid-template-columns: 1fr 2fr 1fr;</code></p>
-      <p><strong>Fungsi:</strong> Menentukan jumlah kolom; fr adalah bagian proporsional dari ruang tersedia, bukan pixel.</p>
-      <p><strong>Urutan belajar:</strong> display → grid → tracks → columns</p>
+    <article class="card dependency-card dependency-columns-card">
+      <h3><code>grid-template-columns</code></h3>
+      <p class="dependency-columns-summary">Atur jumlah kolom Grid dan perbandingan lebarnya.</p>
+      <p class="dependency-columns-requirement"><strong>Syarat:</strong> pasang aturan ini pada wadah yang memakai <code>display: grid</code>.</p>
+      <figure class="dependency-columns-figure" aria-label="Contoh tiga kolom Grid dengan perbandingan lebar 1 banding 2 banding 1">
+        <div class="dependency-columns-preview">
+          <span><strong>1fr</strong><small>1 bagian</small></span>
+          <span><strong>2fr</strong><small>2 bagian</small></span>
+          <span><strong>1fr</strong><small>1 bagian</small></span>
+        </div>
+        <figcaption>Kolom tengah mendapat ruang dua kali lebih banyak daripada tiap kolom samping.</figcaption>
+      </figure>
+      <pre class="dependency-columns-code"><code>.wadah {
+  display: grid;
+  grid-template-columns: 1fr 2fr 1fr;
+}</code></pre>
+      <p class="dependency-columns-note"><strong>Artinya:</strong> <code>fr</code> adalah bagian dari ruang yang tersisa. Jadi, 1 : 2 : 1 membagi ruang menjadi empat bagian—satu, dua, dan satu.</p>
     </article>
   </div>
 
   <div class="learning-order">
-    <h3>LEARNING ORDER</h3>
+    <h3>URUTAN BELAJAR</h3>
     <div class="order-track">
-      <div class="order-step"><span>01</span>CSS Structure</div>
-      <div class="order-step"><span>02</span>Box Model</div>
+      <div class="order-step"><span>01</span>Struktur CSS</div>
+      <div class="order-step"><span>02</span>Model Kotak</div>
       <div class="order-step"><span>03</span>Display</div>
       <div class="order-step"><span>04</span>Flexbox</div>
       <div class="order-step"><span>05</span>Grid</div>
-      <div class="order-step"><span>06</span>Position</div>
-      <div class="order-step"><span>07</span>Responsive Layout</div>
-      <div class="order-step"><span>08</span>Advanced CSS</div>
+      <div class="order-step"><span>06</span>Posisi</div>
+      <div class="order-step"><span>07</span>Tata Letak Responsif</div>
+      <div class="order-step"><span>08</span>CSS Lanjutan</div>
     </div>
   </div>
 
   <div class="tree-grid">
     <article class="card tree-card">
-      <h3>FLEXBOX DEPENDENCY TREE</h3>
+      <h3>POHON SYARAT FLEXBOX</h3>
       <div class="tree">
         <div class="tree-node root">DISPLAY: FLEX</div>
         <div class="tree-children">
@@ -108,10 +133,10 @@
           <div class="tree-node">flex-basis</div><div class="tree-node">align-self</div>
         </div>
       </div>
-      <p class="tree-caption">MAIN AXIS → justify-content · CROSS AXIS → align-items · MULTIPLE LINES → align-content</p>
+      <p class="tree-caption">Sumbu utama (arah susunan) → justify-content · sumbu silang (arah melintang) → align-items · beberapa baris → align-content</p>
     </article>
     <article class="card tree-card">
-      <h3>GRID DEPENDENCY TREE</h3>
+      <h3>POHON SYARAT GRID</h3>
       <div class="tree">
         <div class="tree-node root">DISPLAY: GRID</div>
         <div class="tree-children">
@@ -123,11 +148,11 @@
           <div class="tree-node">justify-self</div><div class="tree-node">align-self</div>
         </div>
       </div>
-      <p class="tree-caption">fr membuat kolom/baris proporsional terhadap ruang yang tersedia.</p>
+      <p class="tree-caption">Setelah ukuran tetap dan jarak dihitung, fr membagi ruang yang tersisa secara proporsional.</p>
     </article>
   </div>
 
-  <div class="dependency-note"><p><strong>PREREQUISITE → CONTEXT → PROPERTY → EFFECT</strong></p></div>
+  <div class="dependency-note"><p><strong>SYARAT AWAL → TEMPAT ATURAN BEKERJA → ATURAN CSS → HASIL YANG TERLIHAT</strong></p></div>
 </section>
 
 <section>
@@ -174,6 +199,7 @@
         <p class="specificity-example" id="specificity-example">ID selector menang di sini</p>
       </div>
       <code>p &lt; .class &lt; #id (specificity makin kuat)</code>
+      <p>Contoh ini membandingkan selector pada kondisi lain yang sama: tanpa <code>!important</code> dan dalam origin/layer yang sama. Jika specificity sama, aturan yang ditulis belakangan yang menang.</p>
     </article>
 
     <article class="card">
@@ -222,8 +248,8 @@
 
   <div class="value-grid box-sizing-grid">
     <article class="card">
-      <h3>content-box (default)</h3>
-      <p>Lebar 180px hanya menghitung content. Padding dan border menambah ukuran total.</p>
+      <h3>content-box (nilai awal CSS)</h3>
+      <p>Lebar 180px hanya menghitung isi. Padding dan border menambah ukuran total. Halaman ini memakai <code>border-box</code> secara umum, jadi contoh ini secara khusus mengaktifkan <code>content-box</code>.</p>
       <div class="sizing-stage"><div class="sizing-box content-box-demo">width: 180px</div></div>
       <code>box-sizing: content-box;</code>
     </article>
@@ -427,8 +453,8 @@
     </article>
 
     <article class="card">
-      <h3>word-break</h3>
-      <p>Kata panjang dapat dipatahkan agar tidak meluber dari container.</p>
+      <h3>overflow-wrap: anywhere</h3>
+      <p>Kata yang terlalu panjang boleh dipatahkan agar tidak meluber dari kotaknya. Ini berbeda dari properti <code>word-break</code>.</p>
       <div class="word-break-demo">supercalifragilisticexpialidociousword</div>
       <code>overflow-wrap: anywhere;</code>
     </article>
@@ -455,12 +481,12 @@
 
 <section>
   <h2>6. UKURAN &amp; CSS UNITS</h2>
-  <p class="intro">Ukuran dapat memakai unit absolut seperti <code>px</code> atau unit relatif seperti <code>%</code>, <code>rem</code>, dan <code>vw</code>.</p>
+  <p class="intro">Ukuran dapat memakai <code>px</code>, atau unit yang acuannya bergantung pada konteks: <code>%</code> pada properti dan wadah terkait, <code>rem</code> pada ukuran huruf dasar halaman, serta <code>vw</code> pada lebar layar browser.</p>
 
   <div class="value-grid">
     <article class="card">
       <h3>px vs %</h3>
-      <p>Pixel tetap; persentase mengikuti lebar parent.</p>
+      <p><code>px</code> tidak mengikuti ukuran wadah seperti <code>width: 50%</code>. Persentase bergantung pada properti: untuk contoh <code>width</code>, nilainya dihitung dari lebar area isi wadah. Tampilan <code>px</code> tetap bisa terpengaruh zoom dan skala perangkat.</p>
       <div class="unit-stage">
         <div class="unit-px">200px</div>
         <div class="unit-percent">50%</div>
@@ -479,7 +505,7 @@
 
     <article class="card">
       <h3>em vs rem</h3>
-      <p>em mengikuti ukuran font parent; rem mengikuti ukuran font root.</p>
+      <p><code>em</code> mengikuti ukuran huruf elemen induk; <code>rem</code> mengikuti ukuran huruf dasar halaman.</p>
       <div class="em-stage"><div>Parent 20px <span>1em</span><span>1rem</span></div></div>
       <code>font-size: 1em; /* vs 1rem */</code>
     </article>
@@ -660,6 +686,70 @@
     bekerja pada elemen yang diposisikan. <code>z-index</code> mengatur urutan tumpukannya.
   </p>
 
+  <article class="card position-playground" id="position-playground">
+    <h3>Relative vs absolute — coba geser sendiri</h3>
+    <p class="position-playground-intro">Bayangkan A, B, dan C sedang antre. <strong>Relative</strong> menggeser B dari tempat antreannya, tetapi tempat B tetap disisakan. <strong>Absolute</strong> mengangkat B keluar dari antrean, lalu menempatkannya dengan mengukur dari kotak induk.</p>
+    <div class="position-playground-grid">
+      <section class="position-playground-example" data-position-mode="relative" aria-labelledby="position-relative-title">
+        <h4 id="position-relative-title">1. Relative: tempat B tetap disisakan</h4>
+        <figure class="position-playground-figure">
+          <div class="position-playground-board position-relative-board">
+            <div class="position-relative-row">
+              <span class="position-playground-token">A</span>
+              <span class="position-origin" aria-label="Tempat asal B">
+                <span class="position-playground-token position-mover B">B</span>
+              </span>
+              <span class="position-playground-token">C</span>
+            </div>
+          </div>
+          <figcaption>Kotak putus-putus menunjukkan tempat asal B. C tetap di tempatnya meskipun B digeser.</figcaption>
+        </figure>
+        <div class="position-playground-controls">
+          <label class="position-playground-control">Geser B ke kiri/kanan
+            <span><input type="range" min="-35" max="80" value="15" data-axis="x" aria-label="Geser B relatif ke kiri atau kanan"><output>15 px</output></span>
+          </label>
+          <label class="position-playground-control">Geser B ke atas/bawah
+            <span><input type="range" min="-25" max="65" value="25" data-axis="y" aria-label="Geser B relatif ke atas atau bawah"><output>25 px</output></span>
+          </label>
+        </div>
+        <code class="position-playground-code" aria-live="polite"></code>
+        <p class="position-playground-explanation" aria-live="polite"></p>
+      </section>
+
+      <section class="position-playground-example" data-position-mode="absolute" aria-labelledby="position-absolute-title">
+        <h4 id="position-absolute-title">2. Absolute: B keluar dari antrean</h4>
+        <p class="position-absolute-mentor"><strong>Kenapa <code>.induk</code> diberi <code>position: relative</code>?</strong> Karena B yang <code>absolute</code> butuh patokan untuk mengukur jaraknya. <code>relative</code> menjadikan kotak induk sebagai patokan, tetapi induknya sendiri tidak bergeser.</p>
+        <figure class="position-playground-figure">
+          <div class="position-playground-board position-absolute-board">
+            <span class="position-frame-label">bingkai luar · patokan cadangan</span>
+            <div class="position-absolute-parent is-positioned">
+              <span class="position-parent-label">.induk</span>
+              <div class="position-absolute-row">
+                <span class="position-playground-token">A</span>
+                <span class="position-playground-token">C</span>
+              </div>
+              <span class="position-playground-token position-mover B" aria-label="B, diposisikan absolute">B</span>
+            </div>
+          </div>
+          <figcaption>Garis tepi kotak biru adalah batas <code>.induk</code>. Coba matikan <code>relative</code>: B akan memakai bingkai luar sebagai patokan.</figcaption>
+        </figure>
+        <button class="position-parent-toggle" type="button" aria-pressed="true">Coba .induk tanpa position: relative</button>
+        <div class="position-playground-controls">
+          <label class="position-playground-control">Jarak B dari kiri patokan
+            <span><input type="range" min="0" max="200" value="135" data-axis="x" aria-label="Atur jarak absolute B dari kiri kotak induk"><output>135 px</output></span>
+          </label>
+          <label class="position-playground-control">Jarak B dari atas patokan
+            <span><input type="range" min="45" max="105" value="65" data-axis="y" aria-label="Atur jarak absolute B dari atas kotak induk"><output>65 px</output></span>
+          </label>
+        </div>
+        <code class="position-playground-code" aria-live="polite"></code>
+        <p class="position-playground-explanation" aria-live="polite"></p>
+      </section>
+    </div>
+    <p class="position-playground-selector-note"><strong>Perhatikan selector:</strong> <code>.B { ... }</code> berarti aturan di dalam kurung kurawal hanya mengenai elemen yang punya class <code>B</code>—di sini, kotak B. <code>.induk { position: relative; }</code> mengenai kotak induk: posisinya tidak berubah, tetapi ia menjadi titik acuan untuk mengukur posisi absolute B.</p>
+    <p class="position-playground-takeaway"><strong>Ingat singkat:</strong> relative = bergeser, tempat asal tetap ada. Absolute = keluar dari alur, lalu diukur dari kotak acuan (di sini: induk yang diberi <code>position: relative</code>).</p>
+  </article>
+
   <div class="value-grid">
     <article class="card">
       <h3>static</h3>
@@ -684,16 +774,16 @@
 
     <article class="card">
       <h3>fixed</h3>
-      <p>Nempel ke layar. Tombol FIXED di pojok kanan bawah adalah contohnya.</p>
+      <p>Tetap menempel pada posisi terhadap layar saat halaman digulir. Tombol panah kembali ke atas di pojok kanan bawah adalah contohnya.</p>
       <div class="position-stage"><i>A</i><i>B</i><i>C</i></div>
       <code>position: fixed;</code>
     </article>
 
     <article class="card">
       <h3>sticky</h3>
-      <p>Normal dulu, lalu menempel ketika mencapai batas saat area ini di-scroll.</p>
-      <div class="sticky-stage">
-        <div>Scroll area ini ↕</div>
+      <p>Coba gulir area abu-abu di bawah. Elemen STICKY akan menempel di bagian atas area itu, lalu berhenti saat mencapai batas bawah area gulir.</p>
+      <div class="sticky-stage" aria-label="Area gulir untuk mencoba position sticky">
+        <div>Gulir area ini untuk mencoba ↕</div>
         <div class="sticky-item">STICKY</div>
         <p>Konten sebelum batas...</p><p>Konten setelah batas...</p><p>Konten berlanjut...</p>
       </div>
@@ -908,9 +998,9 @@
 <section>
   <h2>16. FLEXBOX — ALIGN-CONTENT</h2>
   <p class="intro">
-    <b>Bedakan:</b> <code>align-items</code> mengatur item di dalam baris.
+    <b>Bedakan:</b> <code>align-items</code> mengatur posisi item pada sumbu silang (arah melintang terhadap susunan).
     <code>align-content</code> mengatur <b>kumpulan baris</b> ketika ada beberapa baris.
-    Karena itu contoh ini harus memakai <code>flex-wrap: wrap</code>.
+    <code>flex-wrap: wrap</code> mengizinkan item membentuk baris tambahan; jika semua item masih muat dalam satu baris, efek <code>align-content</code> belum terlihat.
   </p>
 
   <div class="value-grid">
@@ -1355,7 +1445,7 @@
         <div class="responsive-tile">KARTU B</div>
         <div class="responsive-tile">KARTU C</div>
       </div>
-      <code>@media (max-width: 700px) { grid-template-columns: 1fr; }</code>
+      <code>@media (max-width: 700px) { .responsive-stage { grid-template-columns: 1fr; } }</code>
     </article>
 
     <article class="card">
@@ -1674,11 +1764,11 @@
 
 <section>
   <h2>40. CONTAINER QUERIES</h2>
-  <p class="intro">Container query menata komponen berdasarkan ukuran parent, bukan viewport.</p>
+  <p class="intro">Container query mengubah tampilan komponen berdasarkan lebar wadah induknya, bukan langsung berdasarkan lebar layar.</p>
   <article class="card">
     <h3>@container</h3>
-    <div class="container-query-stage"><div class="container-query-card"><b>Komponen adaptif</b><span>Ubah lebar viewport untuk mengubah ukuran container.</span></div></div>
-    <code>.parent { container-type: inline-size; } @container (min-width: 480px) { ... }</code>
+    <div class="container-query-stage"><div class="container-query-card"><b>Komponen adaptif</b><span>Container query membaca lebar wadah komponen, bukan lebar viewport. Pada contoh ini, ukuran viewport ikut mengubah lebar wadah.</span></div></div>
+    <code>.wadah { container-type: inline-size; } @container (min-width: 480px) { .komponen { ... } }</code>
   </article>
 </section>
 
@@ -1858,7 +1948,9 @@
 
 </main>
 
-<div class="fixed-button">FIXED</div>
+<button class="back-to-top" id="back-to-top" type="button" aria-label="Kembali ke atas halaman" title="Kembali ke atas" hidden>
+  <span aria-hidden="true">↑</span>
+</button>
 
 <footer>CSS Visual Playground — edit style.css untuk bereksperimen.</footer>
 
@@ -1905,11 +1997,21 @@
   document.addEventListener("keydown", (event) => {
     if (event.key === "Escape" && !sidebar.hidden) setSidebarOpen(false);
   });
+
+  const backToTop = document.querySelector("#back-to-top");
+  const updateBackToTop = () => {
+    backToTop.hidden = window.scrollY < 400;
+  };
+  window.addEventListener("scroll", updateBackToTop, { passive: true });
+  backToTop.addEventListener("click", () => {
+    window.scrollTo({
+      top: 0,
+      behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth"
+    });
+  });
+  updateBackToTop();
 </script>
 
-<<<<<<< HEAD
 <script src="learning.js" defer></script>
-=======
->>>>>>> ce1bebb8da6b08197fb8d6fc0b5c0ba9cdbb026f
 </body>
 </html>

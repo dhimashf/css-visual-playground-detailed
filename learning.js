@@ -15,6 +15,387 @@
   const dependencySection = originalSections[0];
   if (!main || !dependencySection) return;
 
+  function wirePositionPlayground() {
+    $$('.position-playground-example').forEach((example) => {
+      const mode = example.dataset.positionMode;
+      const mover = $('.position-mover', example);
+      const code = $('.position-playground-code', example);
+      const explanation = $('.position-playground-explanation', example);
+      const parent = $('.position-absolute-parent', example);
+      const parentToggle = $('.position-parent-toggle', example);
+      const controls = $$('.position-playground-control input', example);
+      if (!mover || !code || !explanation || controls.length !== 2) return;
+      let parentIsPositioned = true;
+
+      const update = () => {
+        const values = Object.fromEntries(controls.map((control) => {
+          const value = Number(control.value);
+          const output = $('output', control.parentElement);
+          if (output) output.value = `${value} px`;
+          return [control.dataset.axis, value];
+        }));
+        mover.style.left = `${values.x}px`;
+        mover.style.top = `${values.y}px`;
+
+        if (mode === 'relative') {
+          code.textContent = `.B { position: relative; left: ${values.x}px; top: ${values.y}px; }`;
+          const horizontal = values.x === 0 ? '' : `${Math.abs(values.x)} px ${values.x < 0 ? 'ke kiri' : 'ke kanan'}`;
+          const vertical = values.y === 0 ? '' : `${Math.abs(values.y)} px ${values.y < 0 ? 'ke atas' : 'ke bawah'}`;
+          const movement = [horizontal, vertical].filter(Boolean).join(' dan ');
+          explanation.textContent = `B ${movement ? `bergeser ${movement}` : 'kembali ke tempat asalnya'}. Tempat asal B tetap disisakan, jadi C tidak ikut berpindah.`;
+          return;
+        }
+
+        if (parent) parent.classList.toggle('is-positioned', parentIsPositioned);
+        if (parentToggle) {
+          parentToggle.setAttribute('aria-pressed', String(parentIsPositioned));
+          parentToggle.textContent = parentIsPositioned
+            ? 'Coba .induk tanpa position: relative'
+            : 'Jadikan .induk sebagai patokan lagi';
+        }
+        const reference = parentIsPositioned ? 'kotak .induk' : 'bingkai luar';
+        code.textContent = `${parentIsPositioned ? '.induk { position: relative; }' : '.induk { position: static; }'}\n.B { position: absolute; left: ${values.x}px; top: ${values.y}px; }`;
+        explanation.textContent = parentIsPositioned
+          ? `B diukur ${values.x} px dari kiri dan ${values.y} px dari atas ${reference}. Relative di .induk hanya membuat patokan; kotak .induk tidak ikut bergeser. B keluar dari antrean, jadi A dan C tidak bergeser.`
+          : `Karena .induk static, ia tidak menjadi patokan. Browser mencari ke atas dan menemukan bingkai luar. Jadi B diukur ${values.x} px dari kiri dan ${values.y} px dari atas bingkai luar.`;
+      };
+
+      controls.forEach((control) => control.addEventListener('input', update));
+      if (parentToggle) {
+        parentToggle.addEventListener('click', () => {
+          parentIsPositioned = !parentIsPositioned;
+          update();
+        });
+      }
+      update();
+    });
+  }
+
+  function buildBoxModelPlayground(section) {
+    const card = make('article', 'card learn-box-model-playground');
+    card.append(
+      make('h3', '', 'Coba sendiri: content-box vs border-box'),
+      make('p', 'learn-visual-intro', 'Atur lebar isi yang diminta, padding, dan border. Kedua kotak menerima angka yang sama; amati lebar luar yang terlihat.')
+    );
+    const controls = make('div', 'learn-visual-controls');
+    const specs = [
+      ['Lebar yang diminta', 'width', 180, 120, 240],
+      ['Padding tiap sisi', 'padding', 20, 0, 40],
+      ['Border tiap sisi', 'border', 6, 0, 12]
+    ];
+    const inputs = {};
+    specs.forEach(([label, key, value, min, max]) => {
+      const wrapper = make('label', 'learn-visual-control', label);
+      const row = make('span');
+      const input = make('input');
+      input.type = 'range';
+      input.min = String(min);
+      input.max = String(max);
+      input.value = String(value);
+      input.setAttribute('aria-label', label);
+      const output = make('output');
+      row.append(input, output);
+      wrapper.append(row);
+      controls.append(wrapper);
+      inputs[key] = { input, output };
+    });
+    const samples = make('div', 'learn-box-model-samples');
+    const boxes = {};
+    [['content-box', 'Lebar total = isi + padding + border'], ['border-box', 'Lebar total tetap sesuai nilai width']].forEach(([mode, description]) => {
+      const sample = make('div', 'learn-box-model-sample');
+      sample.append(make('strong', '', mode));
+      const figure = make('div', 'learn-box-model-figure');
+      const box = make('div', `learn-box-model-box is-${mode}`, 'ISI');
+      figure.append(box);
+      const result = make('p', 'learn-box-model-result');
+      const sampleCode = make('code', 'learn-box-model-code');
+      sample.append(figure, make('p', 'learn-box-model-caption', description), result, sampleCode);
+      samples.append(sample);
+      boxes[mode] = { box, result, sampleCode };
+    });
+    const code = make('pre', 'learn-visual-code');
+    const explanation = make('p', 'learn-visual-explanation');
+    explanation.setAttribute('aria-live', 'polite');
+    const update = () => {
+      const values = Object.fromEntries(Object.entries(inputs).map(([key, controls]) => {
+        const value = Number(controls.input.value);
+        controls.output.value = `${value} px`;
+        return [key, value];
+      }));
+      Object.entries(boxes).forEach(([mode, sample]) => {
+        sample.box.style.width = `${values.width}px`;
+        sample.box.style.padding = `${values.padding}px`;
+        sample.box.style.borderWidth = `${values.border}px`;
+        const total = mode === 'content-box'
+          ? values.width + (values.padding + values.border) * 2
+          : values.width;
+        sample.result.textContent = `Lebar luar: ${total} px`;
+        sample.sampleCode.textContent = `box-sizing: ${mode};`;
+        sample.box.setAttribute('aria-label', `${mode}: lebar luar ${total} piksel`);
+      });
+      code.textContent = `.content-box { box-sizing: content-box; width: ${values.width}px; padding: ${values.padding}px; border: ${values.border}px solid; }\n.border-box { box-sizing: border-box; width: ${values.width}px; padding: ${values.padding}px; border: ${values.border}px solid; }`;
+      explanation.textContent = `content-box menghitung width hanya untuk isi, lalu menambahkan padding dan border di kedua sisi. border-box memasukkan padding dan border ke dalam width, sehingga lebar luarnya tetap ${values.width} px.`;
+    };
+    Object.values(inputs).forEach(({ input }) => input.addEventListener('input', update));
+    card.append(controls, samples, code, explanation);
+    section.append(card);
+    update();
+  }
+
+  function buildCascadePlayground(section) {
+    const card = make('article', 'card learn-cascade-playground');
+    card.append(
+      make('h3', '', 'Coba sendiri: aturan CSS mana yang menang?'),
+      make('p', 'learn-visual-intro', 'Nyalakan atau matikan aturan yang cocok dengan paragraf yang sama. Angka specificity ditulis dengan urutan ID–class–elemen. Agar perbandingannya adil, anggap semua aturan berasal dari tempat yang sama dan tidak memakai !important. Dalam kondisi itu, selector yang lebih spesifik menang; jika sama kuat, aturan yang ditulis belakangan menang.')
+    );
+    const controls = make('div', 'learn-cascade-controls');
+    const options = [
+      { key: 'element', selector: 'p', specificity: '0-0-1', color: '#b42318', label: 'Selector elemen p' },
+      { key: 'class', selector: '.pesan', specificity: '0-1-0', color: '#175cd3', label: 'Selector class .pesan' },
+      { key: 'id', selector: '#contoh', specificity: '1-0-0', color: '#067647', label: 'Selector ID #contoh' }
+    ];
+    const toggles = {};
+    options.forEach((option) => {
+      const label = make('label', 'learn-cascade-option');
+      const input = make('input');
+      input.type = 'checkbox';
+      input.checked = true;
+      input.value = option.key;
+      input.setAttribute('aria-label', `Aktifkan ${option.label}`);
+      label.append(input, make('span', '', option.label), make('code', '', option.selector), make('small', '', `specificity ${option.specificity}`));
+      controls.append(label);
+      toggles[option.key] = input;
+    });
+    const sample = make('p', 'learn-cascade-sample pesan', 'Halo! Warna teks ini mengikuti aturan pemenang.');
+    sample.id = 'learn-cascade-example';
+    const winner = make('p', 'learn-cascade-winner');
+    winner.setAttribute('aria-live', 'polite');
+    const code = make('pre', 'learn-visual-code');
+    const update = () => {
+      const active = options.filter((option) => toggles[option.key].checked);
+      if (!active.length) {
+        sample.style.color = '';
+        winner.textContent = 'Tidak ada aturan warna dari demo yang aktif; browser memakai warna teks bawaan.';
+        code.textContent = '/* Aktifkan setidaknya satu aturan untuk memberi warna. */';
+        return;
+      }
+      const selected = active.reduce((best, option) =>
+        option.specificity.localeCompare(best.specificity, undefined, { numeric: true }) >= 0 ? option : best
+      );
+      sample.style.color = selected.color;
+      winner.textContent = `${selected.label} menang karena specificity ${selected.specificity} paling kuat di antara aturan yang aktif.`;
+      code.textContent = active.map((option) => `${option.selector} { color: ${option.color}; } /* specificity ${option.specificity} */`).join('\n');
+    };
+    Object.values(toggles).forEach((input) => input.addEventListener('change', update));
+    card.append(controls, sample, winner, code, make('p', 'learn-visual-explanation', 'Dalam contoh ini, urutan kekuatannya: selector elemen < class < ID. Aturan yang ditulis belakangan tidak otomatis menang jika selector-nya lebih lemah.'));
+    section.append(card);
+    update();
+  }
+
+  function buildVisibilityPlayground(section) {
+    const card = make('article', 'card learn-visibility-playground');
+    card.append(
+      make('h3', '', 'Coba sendiri: sembunyikan B dengan tiga cara'),
+      make('p', 'learn-visual-intro', 'Pilih cara menyembunyikan B. Perhatikan apakah tempatnya masih ada. Coba klik area B: transparan bukan berarti tidak bisa diklik.')
+    );
+    const controls = make('div', 'learn-visibility-controls');
+    const modes = [
+      ['visible', 'Tampilkan semua'],
+      ['display', 'display: none'],
+      ['visibility', 'visibility: hidden'],
+      ['opacity', 'opacity: 0']
+    ];
+    const stage = make('div', 'learn-visibility-stage');
+    const before = make('span', 'learn-visibility-token', 'A');
+    const target = make('button', 'learn-visibility-token learn-visibility-target', 'B');
+    target.type = 'button';
+    target.setAttribute('aria-label', 'Kotak B; bisa diklik meskipun transparan');
+    const after = make('span', 'learn-visibility-token', 'C');
+    const clickNote = make('p', 'learn-visibility-click', 'Belum ada klik pada B.');
+    clickNote.setAttribute('aria-live', 'polite');
+    const explanation = make('p', 'learn-visual-explanation');
+    explanation.setAttribute('aria-live', 'polite');
+    const descriptions = {
+      visible: 'B terlihat dan menempati ruang.',
+      display: 'display: none menghapus B dari tampilan dan alur layout. C bergerak mengisi ruangnya.',
+      visibility: 'visibility: hidden menyembunyikan B, tetapi ruangnya tetap disisakan. C tetap di tempat.',
+      opacity: 'opacity: 0 membuat B transparan, tetapi ruangnya tetap ada dan B masih bisa diklik.'
+    };
+    const update = (mode) => {
+      target.style.display = mode === 'display' ? 'none' : '';
+      target.style.visibility = mode === 'visibility' ? 'hidden' : '';
+      target.style.opacity = mode === 'opacity' ? '0' : '';
+      explanation.textContent = descriptions[mode];
+      modes.forEach(([key]) => {
+        const button = controls.querySelector(`[data-visibility-mode="${key}"]`);
+        button.setAttribute('aria-pressed', String(key === mode));
+      });
+    };
+    modes.forEach(([mode, label]) => {
+      const button = make('button', 'learn-visual-button', label);
+      button.type = 'button';
+      button.dataset.visibilityMode = mode;
+      button.setAttribute('aria-pressed', String(mode === 'visible'));
+      button.addEventListener('click', () => update(mode));
+      controls.append(button);
+    });
+    target.addEventListener('click', () => {
+      clickNote.textContent = 'B masih menerima klik. opacity: 0 hanya mengubah transparansi, bukan interaksi.';
+    });
+    stage.append(before, target, after);
+    card.append(controls, stage, clickNote, explanation);
+    section.append(card);
+  }
+
+  function buildFlexGridPlayground(section) {
+    const card = make('article', 'card learn-flex-grid-playground');
+    card.append(
+      make('h3', '', 'Coba sendiri: Flexbox vs Grid'),
+      make('p', 'learn-visual-intro', 'Gunakan kumpulan kartu yang sama. Flexbox biasanya dipilih saat susunan utama mengikuti satu arah—mendatar atau menurun—dan bisa membungkus item ke baris baru. Grid memudahkan pengaturan baris dan kolom bersama-sama.')
+    );
+    const controls = make('div', 'learn-visual-controls');
+    const directionLabel = make('label', 'learn-visual-control', 'Arah Flexbox');
+    const direction = make('select');
+    [['row', 'Mendatar'], ['column', 'Menurun']].forEach(([value, label]) => {
+      const option = make('option', '', label);
+      option.value = value;
+      direction.append(option);
+    });
+    directionLabel.append(direction);
+    const columnsLabel = make('label', 'learn-visual-control', 'Jumlah kolom Grid');
+    const columns = make('select');
+    [2, 3, 4].forEach((value) => {
+      const option = make('option', '', String(value));
+      option.value = String(value);
+      if (value === 3) option.selected = true;
+      columns.append(option);
+    });
+    columnsLabel.append(columns);
+    controls.append(directionLabel, columnsLabel);
+    const modes = make('div', 'learn-flex-grid-modes');
+    const stage = make('div', 'learn-flex-grid-stage');
+    ['A', 'B', 'C', 'D', 'E', 'F'].forEach((letter) => stage.append(make('span', 'learn-flex-grid-item', `Kartu ${letter}`)));
+    const code = make('pre', 'learn-visual-code');
+    const explanation = make('p', 'learn-visual-explanation');
+    explanation.setAttribute('aria-live', 'polite');
+    let activeMode = 'flex';
+    const update = () => {
+      stage.classList.toggle('is-grid', activeMode === 'grid');
+      stage.style.flexDirection = direction.value;
+      stage.style.gridTemplateColumns = `repeat(${columns.value}, minmax(0, 1fr))`;
+      directionLabel.hidden = activeMode !== 'flex';
+      columnsLabel.hidden = activeMode !== 'grid';
+      code.textContent = activeMode === 'flex'
+        ? `.wadah { display: flex; flex-direction: ${direction.value}; gap: 8px; }`
+        : `.wadah { display: grid; grid-template-columns: repeat(${columns.value}, 1fr); gap: 8px; }`;
+      explanation.textContent = activeMode === 'flex'
+        ? `Flexbox menyusun kartu terutama ke satu arah (${direction.value === 'row' ? 'mendatar' : 'menurun'}). Flexbox juga bisa membungkus item; pilih Grid saat kamu ingin mengatur baris dan kolom bersama-sama.`
+        : `Grid membagi kartu menjadi ${columns.value} kolom. Gunakan Grid saat kamu ingin mengatur baris dan kolom bersama-sama.`;
+      modes.querySelectorAll('button').forEach((button) => button.setAttribute('aria-pressed', String(button.dataset.layoutMode === activeMode)));
+    };
+    [['flex', 'Pakai Flexbox'], ['grid', 'Pakai Grid']].forEach(([mode, label]) => {
+      const button = make('button', 'learn-visual-button', label);
+      button.type = 'button';
+      button.dataset.layoutMode = mode;
+      button.addEventListener('click', () => {
+        activeMode = mode;
+        update();
+      });
+      modes.append(button);
+    });
+    direction.addEventListener('change', update);
+    columns.addEventListener('change', update);
+    card.append(modes, controls, stage, code, explanation);
+    section.append(card);
+    update();
+  }
+
+  function buildResponsiveQueryPlayground(section) {
+    const card = make('article', 'card learn-query-playground');
+    card.append(
+      make('h3', '', 'Coba sendiri: media query vs container query'),
+      make('p', 'learn-visual-intro', 'Dua demo terpisah dengan kartu yang sama. Ubah lebar area layar pada demo pertama dan lebar wadah komponen pada demo kedua.')
+    );
+    const grid = make('div', 'learn-query-grid');
+    const examples = [
+      {
+        title: 'Media query · ukuran layar',
+        label: 'Lebar layar simulasi',
+        min: 320,
+        max: 680,
+        value: 480,
+        source: 'media',
+        code: '@media (max-width: 420px) { .kartu { flex-direction: column; } }'
+      },
+      {
+        title: 'Container query · ukuran wadah',
+        label: 'Lebar wadah komponen',
+        min: 220,
+        max: 560,
+        value: 360,
+        source: 'container',
+        code: '.wadah { container-type: inline-size; }\n@container (max-width: 340px) { .kartu { flex-direction: column; } }'
+      }
+    ];
+    examples.forEach((spec) => {
+      const example = make('section', 'learn-query-example');
+      example.append(make('h4', '', spec.title));
+      const control = make('label', 'learn-visual-control', spec.label);
+      const row = make('span');
+      const input = make('input');
+      input.type = 'range';
+      input.min = String(spec.min);
+      input.max = String(spec.max);
+      input.value = String(spec.value);
+      input.setAttribute('aria-label', spec.label);
+      const output = make('output', '', `${spec.value} px`);
+      row.append(input, output);
+      control.append(row);
+      const frame = make('div', 'learn-query-frame');
+      const preview = make('iframe', 'learn-query-iframe');
+      preview.title = spec.title;
+      preview.setAttribute('sandbox', 'allow-same-origin');
+      const queryRule = spec.source === 'media'
+        ? '@media (max-width: 420px) { .demo-card { flex-direction: column; align-items: flex-start; } .demo-card strong { width: 100%; } }'
+        : '@container demo (max-width: 340px) { .demo-card { flex-direction: column; align-items: flex-start; } .demo-card strong { width: 100%; } }';
+      preview.srcdoc = `<!doctype html><html lang="id"><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><style>*{box-sizing:border-box}body{margin:0;padding:12px;font:14px system-ui,sans-serif;color:#172033}.demo-container{${spec.source === 'container' ? 'container-type:inline-size;container-name:demo;' : ''}width:100%}.demo-card{display:flex;align-items:center;gap:10px;padding:12px;border-radius:8px;background:#f2f7ff;border:1px solid #cbd8e8}.demo-card strong{display:grid;place-items:center;width:48px;height:48px;flex:none;border-radius:7px;background:#6750a4;color:white}.demo-card span{line-height:1.45}${queryRule}</style><div class="demo-container"><div class="demo-card"><strong>A</strong><span>Kartu menyesuaikan pemicunya.</span></div></div></html>`;
+      const explanation = make('p', 'learn-visual-explanation');
+      explanation.setAttribute('aria-live', 'polite');
+      const code = make('pre', 'learn-visual-code', spec.code);
+      const applyContainerWidth = () => {
+        const container = preview.contentDocument && preview.contentDocument.querySelector('.demo-container');
+        if (container) container.style.width = `${Number(input.value)}px`;
+      };
+      if (spec.source === 'container') preview.addEventListener('load', applyContainerWidth);
+      const update = () => {
+        const width = Number(input.value);
+        output.value = `${width} px`;
+        if (spec.source === 'media') {
+          preview.style.width = `${width}px`;
+          preview.style.maxWidth = 'none';
+          explanation.textContent = width <= 420
+            ? `Lebar viewport simulasi ${width}px, yaitu 420px atau kurang. Media query aktif dan mengubah susunan kartu menjadi vertikal.`
+            : `Lebar viewport simulasi ${width}px, lebih dari 420px. Media query tidak aktif, jadi kartu tetap mendatar.`;
+        } else {
+          preview.style.width = '100%';
+          preview.style.maxWidth = '100%';
+          applyContainerWidth();
+          const contentWidth = width;
+          explanation.textContent = contentWidth <= 340
+            ? `Lebar luar wadah ${width}px; area isi yang diperiksa query ${contentWidth}px. Karena 340px atau kurang, container query aktif.`
+            : `Lebar luar wadah ${width}px; area isi yang diperiksa query ${contentWidth}px. Karena lebih dari 340px, container query tidak aktif.`;
+        }
+      };
+      input.addEventListener('input', update);
+      preview.addEventListener('load', update);
+      example.append(control, frame, preview, code, explanation);
+      grid.append(example);
+      update();
+    });
+    card.append(grid, make('p', 'learn-visual-explanation', 'Intinya: media query bertanya “seberapa lebar layar/viewport?”, sedangkan container query bertanya “seberapa lebar wadah komponen ini?”.'));
+    section.append(card);
+  }
+
   const topic = (property, level, target, requires, dependsOn, changes, related, why, effect, commonMistake, whenToUse, browserNote = '') => ({
     property,
     level,
@@ -105,9 +486,9 @@
     topic('position', 'position', { section: 11, heading: 'absolute' }, ['Elemen yang ingin diposisikan'], ['Pilih position dan tentukan elemen yang menjadi patokan'], ['Letak elemen di halaman dan hubungannya dengan elemen lain'], ['inset', 'z-index', 'transform'], 'position menentukan apakah elemen tetap di tempat, bisa digeser, atau ditempatkan terhadap kotak acuan.', 'Dengan position: absolute, elemen keluar dari susunan biasa dan diletakkan relatif ke kotak acuan.', 'Mengira position: absolute selalu memakai elemen pembungkus yang tepat di luarnya sebagai patokan.', 'Gunakan untuk badge, label, atau overlay yang perlu menempel pada bagian tertentu.'),
     topic('flex-direction', 'flexbox', { section: 12, heading: 'row' }, ['display: flex'], ['Pilih row atau column'], ['Arah susunan item dan arah sumbu utama'], ['justify-content', 'align-items'], 'flex-direction menentukan item disusun mendatar atau menurun.', 'row menyusun item dari kiri ke kanan; column menyusunnya dari atas ke bawah pada halaman ini.', 'Mengira justify-content selalu mengatur arah mendatar. Arah ikut berubah saat flex-direction berubah.', 'Pilih ini dulu untuk menentukan arah susunan item Flexbox.'),
     topic('justify-content (Flexbox)', 'flexbox', { section: 13, heading: 'center' }, ['display: flex'], ['Ada ruang kosong di arah susunan item'], ['Posisi atau jarak antaritem sepanjang arah susunan'], ['flex-direction', 'gap'], 'justify-content mengatur ruang di sepanjang arah yang ditentukan flex-direction.', 'Item bisa dirapatkan, dipusatkan, atau diberi jarak di antara satu sama lain.', 'Mengharapkan item berpindah saat sudah memenuhi seluruh ruang.', 'Gunakan untuk mengatur posisi atau jarak antaritem Flexbox.'),
-    topic('align-items (Flexbox)', 'flexbox', { section: 14, heading: 'center' }, ['display: flex'], ['Item punya ruang untuk bergerak melintang terhadap arah susunan'], ['Posisi item di dalam baris atau kolom Flexbox'], ['align-self', 'align-content'], 'align-items mengatur posisi item melintang terhadap arah susunannya.', 'Item bisa dirapatkan ke awal, tengah, atau akhir; nilai stretch bisa membuatnya memenuhi ruang.', 'Mengira align-items mengatur jarak antarbaris Flexbox.', 'Gunakan untuk merapikan posisi item di dalam baris atau kolom Flexbox.'),
+    topic('align-items (Flexbox)', 'flexbox', { section: 14, heading: 'center' }, ['display: flex'], ['Item punya ruang untuk bergerak melintang terhadap arah susunan'], ['Posisi item pada sumbu silang'], ['align-self', 'align-content'], 'align-items mengatur posisi item pada sumbu silang, yaitu arah melintang terhadap arah susunan item.', 'Item bisa dirapatkan ke awal, tengah, atau akhir; nilai stretch bisa membuatnya memenuhi ruang.', 'Mengira align-items mengatur jarak antarbaris Flexbox.', 'Gunakan untuk mengatur posisi item pada sumbu silang.'),
     topic('flex-wrap', 'flexbox', { section: 15, heading: 'wrap' }, ['display: flex'], ['Item tidak muat dalam satu baris, atau pilih wrap-reverse'], ['Apakah item tetap satu baris atau pindah ke baris berikutnya'], ['align-content', 'flex-direction'], 'flex-wrap baru berlaku setelah display: flex aktif.', 'Dengan wrap, item yang tidak muat pindah ke baris berikutnya. Tanpa wrap, item tetap satu baris.', 'Mengira flex-wrap bekerja tanpa display: flex, atau item akan pindah walau masih muat.', 'Gunakan saat item perlu pindah ke baris berikutnya pada layar sempit.'),
-    topic('align-content (Flexbox)', 'flexbox', { section: 16, heading: 'center' }, ['display: flex', 'flex-wrap: wrap'], ['Ada lebih dari satu baris dan masih ada ruang kosong'], ['Posisi atau jarak antarbaris Flexbox'], ['align-items', 'flex-wrap'], 'align-content mengatur kumpulan baris, bukan posisi item di dalam satu baris.', 'Beberapa baris bisa dirapatkan, dipusatkan, atau diberi jarak.', 'Menggunakannya saat item hanya membentuk satu baris.', 'Gunakan saat Flexbox punya beberapa baris dan ada ruang yang bisa dibagi.'),
+    topic('align-content (Flexbox)', 'flexbox', { section: 16, heading: 'center' }, ['display: flex', 'flex-wrap: wrap'], ['Item benar-benar membentuk lebih dari satu baris dan ada ruang kosong pada sumbu silang'], ['Posisi atau jarak kumpulan baris Flexbox'], ['align-items', 'flex-wrap'], 'align-content mengatur kumpulan baris, bukan posisi item di dalam satu baris.', 'Beberapa baris bisa dirapatkan, dipusatkan, atau diberi jarak jika ada ruang pada sumbu silang.', 'Menggunakannya saat item hanya membentuk satu baris, atau wrap aktif tetapi item masih muat dalam satu baris.', 'Gunakan saat Flexbox benar-benar punya beberapa baris dan ada ruang yang bisa dibagi.'),
     topic('flex item properties', 'flexbox', { section: 17, heading: 'flex-grow' }, ['item menjadi anak langsung flex container'], ['basis, ruang tersedia, dan faktor grow/shrink'], ['ukuran, alignment individu, atau urutan visual item'], ['flex-basis', 'flex-shrink', 'align-self', 'order'], 'Property item mengatur bagaimana setiap item merespons ruang container.', 'Item dapat tumbuh, menyusut, bergeser sendiri, atau berubah urutan visual.', 'Mengira order mengubah urutan DOM atau akses keyboard.', 'Gunakan untuk mengatur respons ukuran dan posisi item Flexbox.'),
     topic('grid-template-columns', 'grid', { section: 18, heading: 'grid-template-columns: 1fr 2fr 1fr' }, ['display: grid'], ['Tentukan berapa kolom dan seberapa lebar masing-masing'], ['Jumlah dan lebar kolom Grid'], ['grid-template-rows', 'gap'], 'grid-template-columns menentukan jumlah dan lebar kolom.', 'Misalnya, 1fr 2fr 1fr membuat kolom tengah mendapat ruang dua kali lebih banyak dari kolom di sisi, jika ruang memungkinkan.', 'Mengira fr adalah ukuran tetap seperti px. Lebarnya juga dipengaruhi ruang yang tersedia dan ukuran isi.', 'Gunakan untuk membuat kolom yang ukurannya tetap, fleksibel, atau gabungan keduanya.'),
     topic('grid-template-rows', 'grid', { section: 22, heading: 'center' }, ['display: grid'], ['ukuran track dan ruang block-axis'], ['jumlah dan ukuran track baris eksplisit'], ['grid-template-columns', 'align-content'], 'grid-template-rows mendefinisikan track baris; intrinsic sizing tetap ikut algoritme Grid.', 'Baris membentuk dimensi block-axis pada grid.', 'Mengira setiap baris harus memiliki tinggi tetap.', 'Gunakan ketika struktur baris perlu didefinisikan eksplisit.'),
@@ -123,7 +504,7 @@
     topic('grid-column', 'grid', { section: 24, heading: 'grid-column: span 2' }, ['Item di dalam elemen dengan display: grid'], ['Garis kolom pada Grid'], ['Kolom tempat item mulai dan berakhir'], ['grid-row', 'grid-area'], 'grid-column memilih garis kolom tempat item mulai dan berakhir.', 'Item bisa menempati satu kolom atau membentang ke beberapa kolom.', 'Mengatur grid-column pada elemen yang bukan item Grid.', 'Gunakan untuk menaruh item di kolom tertentu atau membuatnya melebar ke beberapa kolom.'),
     topic('grid-row', 'grid', { section: 24, heading: 'grid-row: span 2' }, ['item di dalam grid container'], ['grid row lines'], ['rentang item pada baris'], ['grid-column', 'grid-area'], 'grid-row menempatkan item relatif terhadap garis baris.', 'Item dapat melintasi satu atau lebih baris.', 'Mengatur grid-row tanpa grid container.', 'Gunakan untuk span atau lokasi baris tertentu.'),
     topic('grid-area', 'grid', { section: 25, heading: 'grid-template-areas' }, ['display: grid'], ['area bernama atau line placement valid'], ['penempatan item pada area/garis grid'], ['grid-template-areas', 'grid-column', 'grid-row'], 'grid-area adalah shorthand untuk penempatan area atau garis.', 'Item menempati area yang ditentukan.', 'Mengira grid-area membuat area bernama tanpa template yang sesuai.', 'Gunakan untuk menempatkan item pada area bernama.'),
-    topic('grid-area shorthand lab', 'grid', { id: 'learn-grid-area-lab' }, ['display: grid', 'Garis baris dan kolom sudah tersedia'], ['Empat nilai ditulis berurutan: row-start / column-start / row-end / column-end'], ['Baris dan kolom yang ditempati item'], ['grid-row', 'grid-column', 'grid-template-areas'], 'Baca grid-area: 4 / 7 / 6 / 5 sebagai: mulai di garis baris 4, mulai di garis kolom 7, berakhir di garis baris 6, dan berakhir di garis kolom 5.', 'Item mengisi baris 4–5 dan kolom 5–6. Angka adalah garis pembatas, bukan nomor kotak.', 'Mengira angka menunjukkan nomor kotak, atau mengira urutannya kolom dulu baru baris.', 'Gunakan angka untuk memilih batas area dengan tepat. Jika lebih mudah dibaca, beri nama area dengan grid-template-areas.'),
+    topic('grid-area shorthand lab', 'grid', { id: 'learn-grid-area-lab' }, ['display: grid', 'Garis baris dan kolom sudah tersedia'], ['Empat nilai ditulis berurutan: row-start / column-start / row-end / column-end'], ['Baris dan kolom yang ditempati item'], ['grid-row', 'grid-column', 'grid-template-areas'], 'Baca grid-area: 4 / 7 / 6 / 5 sebagai: mulai pada garis baris 4 (garis mendatar), mulai pada garis kolom 7 (garis tegak), lalu berakhir pada garis baris 6 dan garis kolom 5.', 'Karena batas kolom ditulis dari garis 7 kembali ke garis 5, area mengisi baris 4–5 dan kolom 5–6. Angka adalah garis pembatas, bukan nomor kotak.', 'Mengira angka menunjukkan nomor kotak, atau mengira urutannya kolom dulu baru baris.', 'Gunakan angka untuk memilih batas area dengan tepat. Jika lebih mudah dibaca, beri nama area dengan grid-template-areas.'),
     topic('justify-self', 'grid', { section: 19 }, ['item di dalam grid container'], ['ruang bebas dalam cell pada inline axis'], ['alignment inline satu item'], ['justify-items'], 'justify-self mengatur satu grid item secara inline-axis.', 'Satu item dapat berbeda dari alignment default grid.', 'Menggunakan justify-self pada flex item dan mengharapkan efek yang sama.', 'Gunakan untuk pengecualian alignment satu item.'),
     topic('align-self (Flexbox)', 'flexbox', { section: 17, heading: 'align-self' }, ['item di dalam flex container'], ['ruang cross-axis pada line'], ['alignment cross-axis satu item'], ['align-items'], 'align-self menimpa align-items pada satu flex item.', 'Satu item dapat berbeda dari alignment teman satu line.', 'Menggunakan align-content untuk memindahkan satu item.', 'Gunakan untuk pengecualian alignment item.'),
     topic('align-self (Grid)', 'grid', { section: 20, heading: 'center' }, ['item di dalam grid container'], ['ruang block-axis dalam cell'], ['alignment block-axis satu item'], ['align-items'], 'align-self menimpa align-items untuk satu grid item.', 'Satu item berbeda posisi di cell-nya.', 'Menggunakan align-self pada element yang bukan grid item.', 'Gunakan untuk pengecualian alignment satu grid item.'),
@@ -286,9 +667,11 @@
   }
 
   function closePanel() {
+    const scrollPosition = window.scrollY;
     panel.hidden = true;
     if (lastMapButton) lastMapButton.classList.remove('learn-is-selected');
-    if (lastMapButton && lastMapButton.isConnected) lastMapButton.focus();
+    window.scrollTo({ top: scrollPosition, behavior: 'instant' });
+    if (lastMapButton && lastMapButton.isConnected) lastMapButton.focus({ preventScroll: true });
   }
   document.addEventListener('keydown', (event) => {
     if (event.key === 'Escape' && !panel.hidden) closePanel();
@@ -317,6 +700,7 @@
     node.classList.add('learn-is-clickable');
     node.tabIndex = 0;
     node.setAttribute('role', 'button');
+    node.title = 'Klik untuk membuka penjelasan dan menuju materi';
     node.addEventListener('click', () => navigateTo(item, node));
     node.addEventListener('keydown', (event) => {
       if (event.key === 'Enter' || event.key === ' ') {
@@ -497,7 +881,7 @@
     const areaBranch = make('article', 'learn-map-branch learn-map-grid-area');
     areaBranch.append(make('h4', '', 'DETAIL GRID-AREA'));
     appendMapNode(areaBranch, topicByProperty('grid-area shorthand lab'));
-    areaBranch.append(make('p', 'learn-map-note', 'Empat angka bukan nomor cell. Urutannya: row-start / column-start / row-end / column-end. Contoh 4 / 7 / 6 / 5 menempati baris 4–5 dan kolom 5–6.'));
+    areaBranch.append(make('p', 'learn-map-note', 'Empat angka bukan nomor kotak. Urutannya: row-start / column-start / row-end / column-end. Garis baris membentang mendatar dan garis kolom membentang tegak. Contoh 4 / 7 / 6 / 5 mengisi baris 4–5 dan kolom 5–6; batas kolomnya dibaca dari garis 7 kembali ke garis 5.'));
     branches.append(areaBranch);
     routes.append(branches);
 
@@ -663,7 +1047,17 @@
       option.value = value;
       align.append(option);
     });
-    [[direction, 'flex-direction'], [justify, 'justify-content'], [align, 'align-items']].forEach(([control, label]) => {
+    const alignContent = make('select', 'learn-axis-align-content');
+    ['flex-start', 'center', 'flex-end', 'space-between', 'space-around', 'stretch'].forEach((value) => {
+      const option = make('option', '', value);
+      option.value = value;
+      alignContent.append(option);
+    });
+    const wrapLabel = make('label', 'learn-axis-wrap-label', 'flex-wrap');
+    const wrap = make('input');
+    wrap.type = 'checkbox';
+    wrapLabel.append(wrap, make('span', '', 'Bungkus item ke baris/kolom baru'));
+    [[direction, 'flex-direction'], [justify, 'justify-content'], [align, 'align-items'], [alignContent, 'align-content']].forEach(([control, label]) => {
       const wrapper = make('label', 'learn-axis-label', label);
       wrapper.append(control);
       controls.append(wrapper);
@@ -671,21 +1065,24 @@
     const stage = make('div', 'learn-axis-stage');
     const mainAxis = make('span', 'learn-axis-main');
     const crossAxis = make('span', 'learn-axis-cross');
-    stage.append(mainAxis, crossAxis, ...['A', 'B', 'C'].map((letter) => make('i', '', letter)));
+    stage.append(mainAxis, crossAxis, ...['A', 'B', 'C', 'D', 'E', 'F'].map((letter) => make('i', '', letter)));
     const note = make('p', 'learn-axis-note');
     const update = () => {
       stage.style.flexDirection = direction.value;
       stage.style.justifyContent = justify.value;
       stage.style.alignItems = align.value;
+      stage.style.flexWrap = wrap.checked ? 'wrap' : 'nowrap';
+      stage.style.alignContent = alignContent.value;
       const column = direction.value.startsWith('column');
       const reverse = direction.value.endsWith('reverse');
       mainAxis.textContent = `SUMBU UTAMA ${column ? (reverse ? '↑' : '↓') : (reverse ? '←' : '→')}`;
       crossAxis.textContent = `SUMBU SILANG ${column ? '→' : '↓'}`;
-      note.textContent = `justify-content mengatur posisi di sumbu utama (${column ? 'vertikal' : 'horizontal'} pada halaman ini). align-items mengatur posisi di sumbu silang. Coba ubah flex-direction untuk melihat arah sumbunya ikut berubah.`;
+      note.textContent = `justify-content mengatur posisi item di sepanjang sumbu utama (${column ? 'vertikal' : 'horizontal'} pada halaman ini). align-items mengatur item pada sumbu silang (arah melintang terhadap susunan). align-content mengatur kumpulan baris/kolom; efeknya terlihat jika Bungkus item aktif, item benar-benar membentuk beberapa baris/kolom, dan masih ada ruang pada sumbu silang.`;
     };
-    [direction, justify, align].forEach((control) => control.addEventListener('change', update));
+    [direction, justify, align, alignContent, wrap].forEach((control) => control.addEventListener('change', update));
     update();
-    card.append(controls, stage, note);
+    controls.append(wrapLabel);
+    card.append(    make('p', 'learn-axis-intro', 'Ubah arah Flexbox, lalu bandingkan properti yang mengatur posisi item dengan properti yang mengatur kumpulan baris. Demo ini punya enam item dalam area terbatas agar efek Bungkus item mudah terlihat.'), controls, stage, note);
     return card;
   }
 
@@ -727,7 +1124,7 @@
     card.dataset.level = item.level;
     card.append(
       make('h3', '', 'Lab: membaca grid-area: 4 / 7 / 6 / 5'),
-      make('p', 'learn-grid-area-intro', 'Bayangkan garis seperti pagar, dan kotak Grid adalah ruang di antara pagar. Angka di kiri menunjukkan garis baris (mendatar); angka di atas menunjukkan garis kolom (tegak). Urutannya: row-start / column-start / row-end / column-end. Dua angka pertama menentukan titik mulai, dua angka terakhir menentukan batas akhir.')
+      make('p', 'learn-grid-area-intro', 'Bayangkan garis seperti pagar, dan kotak Grid adalah ruang di antara pagar. Garis baris membentang mendatar (nomornya ditulis di kiri); garis kolom membentang tegak (nomornya ditulis di atas). Urutannya: row-start / column-start / row-end / column-end. Dua angka pertama menentukan titik mulai, dua angka terakhir menentukan batas akhir.')
     );
     appendRequiresBadge(card, item);
 
@@ -829,9 +1226,9 @@
       const lastRow = Math.max(rowStart, rowEnd);
       const firstColumn = Math.min(columnStart, columnEnd);
       const lastColumn = Math.max(columnStart, columnEnd);
-      const rowOrder = rowStart > rowEnd ? 'Angka batas akhir baris lebih kecil dari angka mulai, jadi arah batasnya berbalik. ' : '';
-      const columnOrder = columnStart > columnEnd ? 'Angka batas akhir kolom lebih kecil dari angka mulai, jadi arah batasnya berbalik. ' : '';
-      explanation.textContent = `grid-area: ${rowStart} / ${columnStart} / ${rowEnd} / ${columnEnd}. Dua angka pertama adalah titik mulai: garis baris ${rowStart} di kiri dan garis kolom ${columnStart} di atas. Dua angka terakhir adalah batas akhir: garis baris ${rowEnd} dan garis kolom ${columnEnd}. ${rowOrder}${columnOrder}Hasilnya, area menutupi kotak pada baris ${firstRow}–${lastRow - 1} dan kolom ${firstColumn}–${lastColumn - 1}. Garis akhir hanya batas; kotak di seberangnya tidak ikut terisi.`;
+      const rowOrder = rowStart > rowEnd ? `Batas baris ditulis terbalik (${rowStart} ke ${rowEnd}), jadi area membentang kembali ke garis yang lebih kecil. ` : '';
+      const columnOrder = columnStart > columnEnd ? `Batas kolom ditulis terbalik (${columnStart} ke ${columnEnd}), jadi area membentang kembali ke garis yang lebih kecil. ` : '';
+      explanation.textContent = `grid-area: ${rowStart} / ${columnStart} / ${rowEnd} / ${columnEnd}. Urutannya: garis baris mulai ${rowStart} (mendatar), garis kolom mulai ${columnStart} (tegak), garis baris akhir ${rowEnd}, lalu garis kolom akhir ${columnEnd}. ${rowOrder}${columnOrder}Area mengisi baris ${firstRow}–${lastRow - 1} dan kolom ${firstColumn}–${lastColumn - 1}. Angka menunjukkan garis pembatas, bukan nomor kotak; garis akhir menjadi batas dan kotak di seberangnya tidak ikut terisi.`;
     };
 
     fields.forEach((field) => field.addEventListener('input', update));
@@ -1130,6 +1527,7 @@
     list.append(areaItem);
   }
 
+  wirePositionPlayground();
   renderStartPath();
   renderFilter();
   renderMap();
@@ -1140,6 +1538,13 @@
     if (index !== 0) renderLearningCard(section, item);
   });
   if (originalSections[4]) buildColorVisualizer(originalSections[4]);
+  if (originalSections[1]) buildCascadePlayground(originalSections[1]);
+  if (originalSections[2]) buildBoxModelPlayground(originalSections[2]);
+  if (originalSections[3]) {
+    buildVisibilityPlayground(originalSections[3]);
+    buildFlexGridPlayground(originalSections[3]);
+  }
+  if (originalSections[26]) buildResponsiveQueryPlayground(originalSections[26]);
 
   const labSection = make('section', 'learn-labs');
   labSection.id = 'learn-labs';
@@ -1170,8 +1575,8 @@
       markup: '<i>A</i><i>B</i><i>C</i><i>D</i>',
       baseCode: '.container {\n  display: flex;\n  height: 160px;\n  align-content: center;\n}',
       fixedCode: '.container {\n  display: flex;\n  flex-wrap: wrap;\n  height: 160px;\n  align-content: center;\n}',
-      notWorking: 'Semua item masih muat dalam satu baris. align-content mengatur jarak antarbaris, jadi belum ada baris yang bisa dipindahkan.',
-      working: 'Saat flex-wrap membuat lebih dari satu baris, align-content bisa mengatur posisi kumpulan baris itu.'
+      notWorking: 'Semua item masih muat dalam satu baris. align-content mengatur kumpulan baris, jadi belum ada beberapa baris yang bisa diposisikan.',
+      working: 'Setelah item benar-benar membentuk beberapa baris dan ada ruang kosong pada sumbu silang, align-content bisa mengatur posisi seluruh kumpulan baris.'
     },
     {
       id: 'absolute', property: 'absolute positioning lab', title: '4. absolute dan containing block',
