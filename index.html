@@ -604,6 +604,50 @@
     <article class="card">
       <h3>box-shadow</h3>
       <div class="shadow-box">SHADOW</div>
+      <code>box-shadow: 0 15px 35px rgba(23, 32, 51, .22);</code>
+      <div class="shadow-variants" aria-label="Perbandingan variasi box-shadow">
+        <div><span class="shadow-variant-box shadow-blur-demo">Blur</span><small>blur-radius: 12px</small></div>
+        <div><span class="shadow-variant-box shadow-spread-demo">Spread</span><small>spread-radius: 6px</small></div>
+        <div><span class="shadow-variant-box shadow-inset-demo">Inset</span><small>inset: bayangan ke dalam</small></div>
+      </div>
+      <div class="shadow-playground">
+        <h4>Coba sendiri: atur bayangannya</h4>
+        <p>Geser kontrol dan lihat perubahan bayangan pada kotak pratinjau.</p>
+        <div class="shadow-playground-controls">
+          <label class="shadow-playground-control">Geser horizontal (offset-x)
+            <span><input type="range" min="-40" max="40" value="0" data-shadow="x"><output>0 px</output></span>
+          </label>
+          <label class="shadow-playground-control">Geser vertikal (offset-y)
+            <span><input type="range" min="-40" max="40" value="15" data-shadow="y"><output>15 px</output></span>
+          </label>
+          <label class="shadow-playground-control">Kekaburan (blur-radius)
+            <span><input type="range" min="0" max="50" value="35" data-shadow="blur"><output>35 px</output></span>
+          </label>
+          <label class="shadow-playground-control">Ukuran (spread-radius)
+            <span><input type="range" min="-10" max="20" value="0" data-shadow="spread"><output>0 px</output></span>
+          </label>
+          <label class="shadow-playground-control">Transparansi bayangan
+            <span><input type="range" min="0" max="100" value="22" data-shadow="opacity"><output>22%</output></span>
+          </label>
+          <label class="shadow-playground-color">Warna bayangan
+            <input type="color" value="#172033" data-shadow="color">
+          </label>
+        </div>
+        <label class="shadow-playground-inset"><input type="checkbox" data-shadow="inset"> Gambar bayangan ke dalam (inset)</label>
+        <div class="shadow-playground-preview" aria-label="Pratinjau box-shadow">
+          <div class="shadow-playground-box">KOTAK</div>
+        </div>
+        <code class="shadow-playground-code" aria-live="polite">box-shadow: 0px 15px 35px 0px rgba(23, 32, 51, 0.22);</code>
+        <p class="shadow-playground-explanation" aria-live="polite">Bayangan bergeser ke kanan dan bawah, dengan tepi yang lembut.</p>
+      </div>
+      <dl class="shadow-breakdown">
+        <div><dt><code>0</code></dt><dd><strong>offset-x</strong>: jarak bayangan ke kiri atau kanan. Nilai positif menggeser ke kanan.</dd></div>
+        <div><dt><code>15px</code></dt><dd><strong>offset-y</strong>: jarak bayangan ke atas atau bawah. Nilai positif menggeser ke bawah.</dd></div>
+        <div><dt><code>35px</code></dt><dd><strong>blur-radius</strong>: tingkat kekaburan; makin besar nilainya, makin lembut dan menyebar bayangannya. Nilai 0 menghasilkan tepi tajam.</dd></div>
+        <div><dt><code>rgba(..., .22)</code></dt><dd><strong>color</strong>: warna sekaligus transparansi bayangan; alpha .22 berarti 22% opak.</dd></div>
+        <div><dt><code>spread-radius</code></dt><dd>Ukuran bayangan diperbesar atau diperkecil. Contoh di atas tidak mencantumkannya, jadi nilainya 0.</dd></div>
+        <div><dt><code>inset</code></dt><dd>Kata opsional untuk menggambar bayangan di sisi dalam elemen.</dd></div>
+      </dl>
     </article>
 
     <article class="card">
@@ -1498,6 +1542,25 @@
         <div class="filter-sample filter-brightness">brightness</div>
       </div>
       <code>filter: blur(2px) | grayscale(1) | brightness(1.3);</code>
+    </article>
+
+    <article class="card">
+      <h3>linear gradient</h3>
+      <figure class="linear-gradient-figure" aria-label="Linear gradient 90 derajat dari ungu di kiri ke hijau di kanan">
+        <div class="linear-gradient-demo">
+          <span>#6750A4<br>0%</span>
+          <span class="linear-gradient-arrow" aria-hidden="true">→</span>
+          <span>#219678<br>100%</span>
+        </div>
+        <figcaption>Arah 90deg bergerak dari kiri ke kanan; warna bertransisi di antaranya.</figcaption>
+      </figure>
+      <code>background: linear-gradient(90deg, #6750A4 0%, #219678 100%);</code>
+      <dl class="gradient-breakdown">
+        <div><dt><code>linear-gradient()</code></dt><dd>Membuat gradasi warna lurus, bukan gambar.</dd></div>
+        <div><dt><code>90deg</code></dt><dd><code>deg</code> berarti derajat untuk menentukan arah: <strong>0deg</strong> ke atas, <strong>90deg</strong> ke kanan, <strong>180deg</strong> ke bawah, dan <strong>270deg</strong> ke kiri.</dd></div>
+        <div><dt><code>#6750A4 0%</code></dt><dd>Warna ungu mulai pada titik awal gradasi (0%).</dd></div>
+        <div><dt><code>#219678 100%</code></dt><dd>Warna hijau berada pada titik akhir (100%). Di antara kedua titik itu, browser menghitung warna peralihan secara bertahap.</dd></div>
+      </dl>
     </article>
 
     <article class="card">

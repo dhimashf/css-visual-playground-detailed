@@ -1162,9 +1162,200 @@ code {
 }
 
 .shadow-box {
+  min-height: 130px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   padding: 50px 20px;
+  border-radius: 8px;
+  background: white;
   text-align: center;
   box-shadow: 0 15px 35px rgba(23,32,51,.22);
+}
+
+.shadow-variants {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
+  gap: 16px;
+  margin-top: 24px;
+  padding: 12px 4px 18px;
+  text-align: center;
+}
+
+.shadow-variants > div {
+  display: grid;
+  justify-items: center;
+  gap: 12px;
+}
+
+.shadow-variant-box {
+  width: 88px;
+  height: 68px;
+  display: grid;
+  place-items: center;
+  border-radius: 8px;
+  background: white;
+  font-size: 12px;
+  font-weight: bold;
+}
+
+.shadow-variants small {
+  color: var(--muted);
+  font-size: 11px;
+}
+
+.shadow-blur-demo {
+  box-shadow: 0 5px 12px rgba(23,32,51,.4);
+}
+
+.shadow-spread-demo {
+  box-shadow: 0 5px 8px 6px rgba(33,150,120,.35);
+}
+
+.shadow-inset-demo {
+  box-shadow: inset 0 0 12px rgba(23,32,51,.45);
+}
+
+.shadow-playground {
+  margin-top: 20px;
+  padding: 14px;
+  border: 1px solid #d8dce5;
+  border-radius: 10px;
+  background: #f8f9fc;
+}
+
+.shadow-playground h4 {
+  margin: 0 0 4px;
+}
+
+.shadow-playground > p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.shadow-playground-controls {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 190px), 1fr));
+  gap: 12px;
+  margin: 16px 0;
+}
+
+.shadow-playground-control,
+.shadow-playground-color {
+  display: grid;
+  gap: 5px;
+  color: var(--ink);
+  font-size: 12px;
+  font-weight: bold;
+}
+
+.shadow-playground-control > span {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 48px;
+  align-items: center;
+  gap: 8px;
+}
+
+.shadow-playground-control input[type="range"] {
+  width: 100%;
+  accent-color: #6750a4;
+}
+
+.shadow-playground-control output {
+  color: var(--muted);
+  font-variant-numeric: tabular-nums;
+  text-align: right;
+}
+
+.shadow-playground-color input {
+  width: 48px;
+  height: 34px;
+  padding: 2px;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  background: white;
+  cursor: pointer;
+}
+
+.shadow-playground-inset {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 4px 0 14px;
+  color: var(--ink);
+  font-size: 13px;
+  font-weight: bold;
+}
+
+.shadow-playground-inset input {
+  accent-color: #6750a4;
+}
+
+.shadow-playground-preview {
+  min-height: 170px;
+  display: grid;
+  place-items: center;
+  padding: 32px;
+  overflow: hidden;
+  border: 1px dashed #c5cad5;
+  border-radius: 8px;
+  background: white;
+}
+
+.shadow-playground-box {
+  width: min(100%, 220px);
+  min-height: 90px;
+  display: grid;
+  place-items: center;
+  border-radius: 10px;
+  background: #eef1f6;
+  color: var(--ink);
+  font-weight: bold;
+}
+
+.shadow-playground-code {
+  overflow-wrap: anywhere;
+}
+
+.shadow-playground-explanation {
+  margin-top: 10px !important;
+}
+
+.shadow-breakdown {
+  display: grid;
+  gap: 10px;
+  margin: 16px 0 0;
+}
+
+.shadow-breakdown > div {
+  display: grid;
+  grid-template-columns: minmax(105px, .8fr) 2fr;
+  gap: 10px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid var(--line);
+}
+
+.shadow-breakdown > div:last-child {
+  padding-bottom: 0;
+  border-bottom: 0;
+}
+
+.shadow-breakdown dt {
+  font-weight: bold;
+}
+
+.shadow-breakdown dt code {
+  display: inline;
+  padding: 0;
+  margin: 0;
+  background: none;
+}
+
+.shadow-breakdown dd {
+  margin: 0;
+  color: var(--muted);
+  font-size: 13px;
 }
 
 .background-repeat-demo {
@@ -3120,6 +3311,71 @@ section[id] {
 
 .filter-brightness {
   filter: brightness(1.3);
+}
+
+.linear-gradient-figure {
+  margin: 0;
+}
+
+.linear-gradient-demo {
+  min-height: 130px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 16px;
+  border-radius: 8px;
+  background: linear-gradient(90deg, #6750a4 0%, #219678 100%);
+  color: white;
+  font-size: 12px;
+  font-weight: bold;
+  text-align: center;
+}
+
+.linear-gradient-arrow {
+  font-size: 28px;
+}
+
+.linear-gradient-figure figcaption {
+  margin-top: 10px;
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.gradient-breakdown {
+  display: grid;
+  gap: 10px;
+  margin: 16px 0 0;
+}
+
+.gradient-breakdown > div {
+  display: grid;
+  grid-template-columns: minmax(105px, .8fr) 2fr;
+  gap: 10px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid var(--line);
+}
+
+.gradient-breakdown > div:last-child {
+  padding-bottom: 0;
+  border-bottom: 0;
+}
+
+.gradient-breakdown dt {
+  font-weight: bold;
+}
+
+.gradient-breakdown dt code {
+  display: inline;
+  padding: 0;
+  margin: 0;
+  background: none;
+}
+
+.gradient-breakdown dd {
+  margin: 0;
+  color: var(--muted);
+  font-size: 13px;
 }
 
 .gradient-examples {

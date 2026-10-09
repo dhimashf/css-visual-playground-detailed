@@ -71,6 +71,53 @@
     });
   }
 
+  function wireBoxShadowPlayground() {
+    $$('.shadow-playground').forEach((playground) => {
+      const preview = $('.shadow-playground-box', playground);
+      const code = $('.shadow-playground-code', playground);
+      const explanation = $('.shadow-playground-explanation', playground);
+      const controls = $$('[data-shadow]', playground);
+      if (!preview || !code || !explanation || controls.length !== 7) return;
+
+      const update = () => {
+        const values = {};
+        controls.forEach((control) => {
+          const key = control.dataset.shadow;
+          if (control.type === 'checkbox') {
+            values[key] = control.checked;
+            return;
+          }
+          if (control.type === 'color') {
+            values[key] = control.value;
+            return;
+          }
+          const value = Number(control.value);
+          values[key] = value;
+          const output = $('output', control.parentElement);
+          if (output) output.value = `${value}${key === 'opacity' ? '%' : ' px'}`;
+        });
+
+        const red = Number.parseInt(values.color.slice(1, 3), 16);
+        const green = Number.parseInt(values.color.slice(3, 5), 16);
+        const blue = Number.parseInt(values.color.slice(5, 7), 16);
+        const color = `rgba(${red}, ${green}, ${blue}, ${(values.opacity / 100).toFixed(2)})`;
+        const inset = values.inset ? 'inset ' : '';
+        const shadow = `${inset}${values.x}px ${values.y}px ${values.blur}px ${values.spread}px ${color}`;
+        preview.style.boxShadow = shadow;
+        code.textContent = `box-shadow: ${shadow};`;
+
+        const horizontal = values.x === 0 ? 'tidak bergeser ke kiri atau kanan' : `bergeser ${Math.abs(values.x)} px ke ${values.x < 0 ? 'kiri' : 'kanan'}`;
+        const vertical = values.y === 0 ? 'tidak bergeser ke atas atau bawah' : `bergeser ${Math.abs(values.y)} px ke ${values.y < 0 ? 'atas' : 'bawah'}`;
+        const blur = values.blur === 0 ? 'tepinya tajam' : `blur ${values.blur} px membuat tepinya ${values.blur < 10 ? 'sedikit' : 'semakin'} lembut`;
+        const spread = values.spread === 0 ? '' : ` Spread ${values.spread > 0 ? 'memperbesar' : 'memperkecil'} bayangan ${Math.abs(values.spread)} px.`;
+        explanation.textContent = `Bayangan ${values.inset ? 'muncul di bagian dalam kotak' : 'muncul di luar kotak'}, ${horizontal} dan ${vertical}; ${blur}.${spread}`;
+      };
+
+      controls.forEach((control) => control.addEventListener('input', update));
+      update();
+    });
+  }
+
   function buildBoxModelPlayground(section) {
     const card = make('article', 'card learn-box-model-playground');
     card.append(
@@ -1528,6 +1575,7 @@
   }
 
   wirePositionPlayground();
+  wireBoxShadowPlayground();
   renderStartPath();
   renderFilter();
   renderMap();
